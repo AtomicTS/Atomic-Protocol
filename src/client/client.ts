@@ -1,4 +1,3 @@
-import "colors";
 import { FullPacketParser, Serializer } from "protodef";
 import { config } from "../config/config";
 import { Events } from '../Events';
@@ -246,7 +245,8 @@ export class Client extends Connection {
 
         // Removed "MC-Data Feature" - Unnecessary Backwards Compatibility
         const authType = AuthenticationType.Full;
-        const chain = [this.clientIdentityChain, ...this.accessToken];
+        const accessTokens = Array.isArray(this.accessToken) ? this.accessToken : [this.accessToken];
+        const chain = [this.clientIdentityChain, ...accessTokens];
 
         const encodedLoginPayload = JSON.stringify({
             AuthenticationType: authType,

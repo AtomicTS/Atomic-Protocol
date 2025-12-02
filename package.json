@@ -1,7 +1,7 @@
 {
   "name": "atomic-protocol",
   "version": "1.2.0",
-  "description": "Atomic Protocol is a modern, efficient, and fully TypeScript-rewritten version of PrismarineJS/bedrock-protocol. It’s built with performance and maintainability in mind.",
+  "description": "Atomic Protocol is a modern, efficient, and fully TypeScript-rewritten version of PrismarineJS/bedrock-protocol. It's built with performance and maintainability in mind.",
   "keywords": [
     "minecraft",
     "bedrock",
@@ -36,8 +36,6 @@
     "@types/jsonwebtoken": "^9.0.9",
     "@types/uuid-1345": "^0.99.25",
     "chalk": "^5.6.2",
-    "colors": "^1.4.0",
-    "dgram": "^1.0.1",
     "gradient-string": "^3.0.0",
     "jsonwebtoken": "^9.0.2",
     "node-nethernet": "github:LucienHH/node-nethernet#protocol",
@@ -45,7 +43,6 @@
     "prismarine-nbt": "^2.7.0",
     "protodef": "^1.18.0",
     "raknet-native": "^1.2.3",
-    "sdp-transform": "^2.15.0",
     "snappy": "^7.2.2",
     "uuid-1345": "^1.0.2",
     "ws": "^8.18.3",
@@ -54,7 +51,6 @@
   "devDependencies": {
     "@types/events": "^3.0.3",
     "@types/node": "^22.13.5",
-    "@types/sdp-transform": "^2.15.0",
     "@types/ws": "^8.18.1",
     "prettier": "^3.6.2",
     "rollup": "^4.52.2",

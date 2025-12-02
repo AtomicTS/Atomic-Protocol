@@ -1,4 +1,3 @@
-import "colors";
 import * as crypto from "crypto";
 import { config } from "../config/config";
 import { clientStatus } from "../types";
@@ -41,7 +40,7 @@ export const keyExchange = (client: any) => {
         client.write('client_to_server_handshake', {});
 
         //@ts-ignore
-        this.emit('join');
+        client.emit('join');
         client.setStatus(clientStatus.Initializing);
     }
 
