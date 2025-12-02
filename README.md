@@ -80,7 +80,6 @@ Contributions are welcome! Feel free to open issues and pull requests to improve
 ## 👥 Authors
 
 - **[Serial-V](https://github.com/Serial-V)**
-- **[NoVa Gh0ul](https://github.com/NoVa-Gh0ul)**
 
 ---
 
