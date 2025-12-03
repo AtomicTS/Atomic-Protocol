@@ -47,22 +47,12 @@ You can also instantiate `new Client(options)` directly, but `createClient` wrap
 | `skipPing` | `boolean` | `false` | Skip the pre-connect server ping. |
 | `followPort` | `boolean` | `true` (when not joining Realms) | If the server advertises a different port, connect to it. |
 | `packets` | `string[]` | `[]` (emit all) | If provided, only these packet names will emit events. |
-| `transport` | `"raknet" \| "nethernet"` | `"raknet"` | Use RakNet (standard) or Nethernet (Realms / TURN) transport. |
+| `transport` | `"raknet" \| "nethernet"` | `"raknet"` | Use RakNet or Nethernet transport. |
 | `networkId` | `bigint` | — | Nethernet network identifier. Set automatically for Realms with Nethernet. |
-| `useSignalling` | `boolean` | `false` | Enable Nethernet signalling/TURN updates. Auto-enabled for Nethernet Realms. |
+| `useSignalling` | `boolean` | `false` | Enable Nethernet signalling updates. Auto-enabled for Nethernet Realms. |
 | `autoReconnect` | `boolean` | `false` | Reserved for future use; reconnect loop not implemented yet. |
 | `realmId` | `number` | — | Join a Realms world by id. Host/port or Nethernet `networkId` are fetched for you. |
 | `inviteCode` | `string` | — | Optional invite code to auto-accept before joining a Realm. |
-
-## Client Lifecycle
-
-Typical event order:
-1) `connect_allowed` — emitted after ping and setup, right before the RakNet/Nethernet connect.
-2) `session` — Xbox/PlayFab auth succeeded and login payloads are ready.
-3) `status` — emits as the client moves through `Connecting → Authenticating → Initializing → Initialized`.
-4) `resource_packs_info` / `resource_pack_stack` — handled automatically, but exposed if you need them.
-5) `join` — server sent `play_status: player_spawn`; you can start queuing gameplay packets here.
-6) Packet events — every protocol packet emits by name (unless filtered via `packets`).
 
 All packet names and field shapes match the protocol spec. The definitions live in `dist/Events.d.ts` and `dist/packets/*`, so TypeScript will guide the payload structure.
 
@@ -82,4 +72,4 @@ The client will fetch the Realm address, pick RakNet or Nethernet automatically,
 
 ## Protocol Reference
 
-Atomic Protocol follows the Bedrock 1.21.124 protocol (`protocolVersion: 860`). For packet names and fields, consult the generated `.d.ts` files.
+Atomic Protocol follows the Bedrock 1.21.124 protocol (`protocolVersion: 860`). For packet names and fields, consult `Events..d.ts` file or `src/packets` directory.
