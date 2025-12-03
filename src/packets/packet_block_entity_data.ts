@@ -4,19 +4,16 @@
  * No description
  */
 
-
 export interface BlockEntityDataPacket {
   position: BlockCoordinates;
   nbt: Nbt;
 }
-
 
 export interface BlockCoordinates {
   x: number;
   y: number;
   z: number;
 }
-
 
 export type Nbt = any;
 

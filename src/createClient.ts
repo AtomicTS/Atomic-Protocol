@@ -1,5 +1,5 @@
 import assert from "assert";
-import { SignalType } from "atomic-nethernet";
+import { SignalType } from "atomic-net";
 import { realmAuth } from "./client/auth";
 import { Client } from "./client/client";
 import { config } from "./config/config";

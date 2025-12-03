@@ -4,20 +4,24 @@
  * No description
  */
 
-
 export interface CreativeContentPacket {
-  groups: {  category: "all" | "construction" | "nature" | "equipment" | "items" | "item_command_only";
-  name: string;
-  icon_item: ItemLegacy;}[];
-  items: {  entry_id: number;
-  item: ItemLegacy;
-  group_index: number;}[];
+  groups: {
+    category:
+      | "all"
+      | "construction"
+      | "nature"
+      | "equipment"
+      | "items"
+      | "item_command_only";
+    name: string;
+    icon_item: ItemLegacy;
+  }[];
+  items: { entry_id: number; item: ItemLegacy; group_index: number }[];
 }
-
 
 export interface ItemLegacy {
   network_id: number;
-  undefined: { network_id: "0"; value: void };
+  payload: { network_id: "0"; value: void };
 }
 
 export const CreativeContentPacketInfo: import("./metadata").PacketMetadata = {

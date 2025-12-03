@@ -4,7 +4,6 @@
  * Transmits EducationLevelSettings to all clients.
  */
 
-
 export interface EducationSettingsPacket {
   CodeBuilderDefaultURI: string;
   CodeBuilderTitle: string;
@@ -13,20 +12,26 @@ export interface EducationSettingsPacket {
   post_process_filter: string;
   screenshot_border_path: string;
   has_agent_capabilities: boolean;
-  agent_capabilities: { has_agent_capabilities: "true";   has: boolean;
-  can_modify_blocks: boolean;};
+  agent_capabilities: {
+    has_agent_capabilities: "true";
+    has: boolean;
+    can_modify_blocks: boolean;
+  };
   HasOverrideURI: boolean;
   OverrideURI: { HasOverrideURI: "true"; value: string };
   HasQuiz: boolean;
   has_external_link_settings: boolean;
-  external_link_settings: { has_external_link_settings: "true";   has: boolean;
-  url: string;
-  display_name: string;};
+  external_link_settings: {
+    has_external_link_settings: "true";
+    has: boolean;
+    url: string;
+    display_name: string;
+  };
 }
 
-
-export const EducationSettingsPacketInfo: import("./metadata").PacketMetadata = {
-  id: 137,
-  name: "education_settings",
-  description: "Transmits EducationLevelSettings to all clients.",
-};
+export const EducationSettingsPacketInfo: import("./metadata").PacketMetadata =
+  {
+    id: 137,
+    name: "education_settings",
+    description: "Transmits EducationLevelSettings to all clients.",
+  };

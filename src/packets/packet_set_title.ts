@@ -4,9 +4,17 @@
  * Used by 3rd party content for the purpose of showing ui banners
  */
 
-
 export interface SetTitlePacket {
-  type: "clear" | "reset" | "set_title" | "set_subtitle" | "action_bar_message" | "set_durations" | "set_title_json" | "set_subtitle_json" | "action_bar_message_json";
+  type:
+    | "clear"
+    | "reset"
+    | "set_title"
+    | "set_subtitle"
+    | "action_bar_message"
+    | "set_durations"
+    | "set_title_json"
+    | "set_subtitle_json"
+    | "action_bar_message_json";
   text: string;
   fade_in_time: number;
   stay_time: number;
@@ -16,9 +24,9 @@ export interface SetTitlePacket {
   filtered_message: string;
 }
 
-
 export const SetTitlePacketInfo: import("./metadata").PacketMetadata = {
   id: 88,
   name: "set_title",
-  description: "Used by 3rd party content for the purpose of showing ui banners",
+  description:
+    "Used by 3rd party content for the purpose of showing ui banners",
 };

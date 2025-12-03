@@ -4,11 +4,9 @@
  * No description
  */
 
-
 export interface PhotoInfoRequestPacket {
   photo_id: number;
 }
-
 
 export const PhotoInfoRequestPacketInfo: import("./metadata").PacketMetadata = {
   id: undefined,

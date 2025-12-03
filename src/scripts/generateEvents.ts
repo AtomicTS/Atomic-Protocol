@@ -59,10 +59,18 @@ const toPacketName = (name: string) =>
 
 const toEventKey = (packetName: string) => packetName.replace(/^packet_/, "");
 
+// Property name helpers
+const IDENT = /^[A-Za-z_$][\w$]*$/;
+const formatProp = (name?: string) => {
+    if (!name) return "payload";
+    return IDENT.test(name) ? name : JSON.stringify(name);
+};
+
 // Primitive <-> TS type mapping
 const PRIMITIVES = new Set([
     "i8", "i16", "i32", "i64", "u8", "u16", "u32", "u64",
     "varint", "zigzag32", "zigzag64",
+    "varint128",
     "li8", "li16", "li32", "li64", "lu8", "lu16", "lu32", "lu64",
     "f32", "f64", "lf32", "lf64",
     "bool", "string", "uuid", "buffer", "void", "native"
@@ -74,6 +82,7 @@ const mapPrimitive = (t: string): string => {
         case "string":
         case "uuid": return "string";
         case "buffer": return "Buffer";
+        case "varint128": return "bigint";
         case "void": return "void";
         case "native": return "any";
         default:
@@ -102,11 +111,13 @@ function handleKind(kind: string, def: any): string {
     switch (kind) {
         case "container":
             return `{${(def || [])
-                .map((f: any) => `  ${f.name}: ${tsType(f.type)};`)
+                .map((f: any) => `  ${formatProp(f.name)}: ${tsType(f.type)};`)
                 .join("\n")}}`;
 
-        case "array":
-            return `${tsType(def.type)}[]`;
+        case "array": {
+            const inner = tsType(def.type);
+            return inner.includes("|") ? `(${inner})[]` : `${inner}[]`;
+        }
 
         case "option":
             return `${tsType(def)} | null`;
@@ -119,10 +130,11 @@ function handleKind(kind: string, def: any): string {
 
             return variants.map(([value, payload]) => {
                 const body = tsType(payload);
+                const key = formatProp(compare);
                 if (body.startsWith("{")) {
-                    return `{ ${compare}: ${JSON.stringify(value)}; ${body.slice(1)}`;
+                    return `{ ${key}: ${JSON.stringify(value)}; ${body.slice(1)}`;
                 } else {
-                    return `{ ${compare}: ${JSON.stringify(value)}; value: ${body} }`;
+                    return `{ ${key}: ${JSON.stringify(value)}; value: ${body} }`;
                 }
             }).join(" | ");
         }
@@ -141,7 +153,7 @@ function handleKind(kind: string, def: any): string {
                 : Object.keys(def.flags || {});
 
             return `{${flags
-                .map((f: string) => `  ${f}: boolean;`)
+                .map((f: string) => `  ${formatProp(f)}: boolean;`)
                 .join("\n")}}`;
         }
 
@@ -252,14 +264,6 @@ function loadMojangDocs(dir: string): Map<string, MojangMeta & { name: string; }
     return map;
 }
 
-// Mojang clone & metadata
-cloneMojangDocs();
-const mojangMeta = loadMojangDocs(MOJANG_JSON_DIR);
-cleanupMojangDocs();
-
-// Packet set
-const packets = Object.entries(types).filter(([k]) => k.startsWith("packet_"));
-
 // Helper type inlining per packet
 
 /**
@@ -314,7 +318,7 @@ function generateHelperTypes(helperNames: Set<string>): string {
 
         if (Array.isArray(def) && def[0] === "container") {
             const fields = def[1]
-                .map((f: any) => `  ${f.name}: ${tsType(f.type)};`)
+                .map((f: any) => `  ${formatProp(f.name)}: ${tsType(f.type)};`)
                 .join("\n");
 
             lines.push(`
@@ -332,8 +336,17 @@ export type ${ifaceName} = ${tsType(def)};
     return lines.join("\n");
 }
 
-// Packet metadata type
-const METADATA_HEADER = `
+async function main() {
+    // Mojang clone & metadata
+    cloneMojangDocs();
+    const mojangMeta = loadMojangDocs(MOJANG_JSON_DIR);
+    cleanupMojangDocs();
+
+    // Packet set
+    const packets = Object.entries(types).filter(([k]) => k.startsWith("packet_"));
+
+    // Packet metadata type
+    const METADATA_HEADER = `
 export interface PacketMetadata {
   id?: number;
   name: string;
@@ -344,21 +357,21 @@ export interface PacketMetadata {
 export const PACKET_METADATA: Record<string, PacketMetadata> = {
 `;
 
-const metadataEntries: string[] = [];
+    const metadataEntries: string[] = [];
 
-// Generate packet files
-for (const [typeName, def] of packets) {
-    const iface = toPacketName(typeName);
-    const eventKey = toEventKey(typeName);
+    // Generate packet files
+    for (const [typeName, def] of packets) {
+        const iface = toPacketName(typeName);
+        const eventKey = toEventKey(typeName);
 
-    const atomicId = extractAtomicId(typeName, def, protocol);
-    const mojang = mojangMeta.get(typeName);
+        const atomicId = extractAtomicId(typeName, def, protocol);
+        const mojang = mojangMeta.get(typeName);
 
-    const id = atomicId ?? mojang?.id;
-    const name = mojang?.name ?? eventKey;
-    const description = mojang?.description;
+        const id = atomicId ?? mojang?.id;
+        const name = mojang?.name ?? eventKey;
+        const description = mojang?.description;
 
-    const jsDoc = `
+        const jsDoc = `
 /**
  * ${iface}
 ${id ? ` * Packet ID: ${id}` : " * Unknown packet ID"}
@@ -366,36 +379,36 @@ ${description ? ` * ${description}` : " * No description"}
  */
 `;
 
-    let packetBody: string;
+        let packetBody: string;
 
-    if (Array.isArray(def) && def[0] === "container") {
-        const fields = def[1].map((f: any) => {
-            if (f.name) {
-                return `  ${f.name}: ${tsType(f.type)};`;
-            }
+        if (Array.isArray(def) && def[0] === "container") {
+            const fields = def[1].map((f: any) => {
+                if (f.name) {
+                    return `  ${formatProp(f.name)}: ${tsType(f.type)};`;
+                }
 
-            if (f.type && Array.isArray(f.type) && f.type[0] === "switch") {
-                return `  payload: ${tsType(f.type)};`;
-            }
+                if (f.type && Array.isArray(f.type) && f.type[0] === "switch") {
+                    return `  payload: ${tsType(f.type)};`;
+                }
 
-            return null;
-        }).filter(Boolean).join("\n");
+                return null;
+            }).filter(Boolean).join("\n");
 
-        packetBody = `
+            packetBody = `
 export interface ${iface} {
 ${fields}
 }
 `;
-    } else {
-        packetBody = `
+        } else {
+            packetBody = `
 export type ${iface} = ${tsType(def)};
 `;
-    }
+        }
 
-    const helperTypes = collectHelperTypesForPacket(typeName);
-    const helpersBlock = generateHelperTypes(helperTypes);
+        const helperTypes = collectHelperTypesForPacket(typeName);
+        const helpersBlock = generateHelperTypes(helperTypes);
 
-    const content = `
+        const content = `
 ${jsDoc}
 ${packetBody}
 ${helpersBlock}
@@ -406,62 +419,61 @@ export const ${iface}Info: import("./metadata").PacketMetadata = {
 };
 `;
 
-    fs.writeFileSync(
-        path.join(GEN_DIR, `${typeName}.ts`),
-        content.trim() + "\n"
-    );
+        const formattedContent = await prettier.format(content, { parser: "typescript" });
 
-    metadataEntries.push(
-        `  "${eventKey}": {
+        fs.writeFileSync(path.join(GEN_DIR, `${typeName}.ts`), formattedContent);
+
+        metadataEntries.push(
+            `  "${eventKey}": {
     id: ${id ?? "undefined"},
     name: ${JSON.stringify(name)},
     description: ${description ? JSON.stringify(description) : "undefined"}
   },`
+        );
+    }
+
+    // Write metadata.ts
+    fs.writeFileSync(
+        METADATA_FILE,
+        await prettier.format(METADATA_HEADER + metadataEntries.join("\n") + "\n};", { parser: "typescript" })
     );
-}
 
-// Write metadata.ts
-fs.writeFileSync(
-    METADATA_FILE,
-    await prettier.format(METADATA_HEADER + metadataEntries.join("\n") + "\n};", { parser: "typescript" })
-);
+    // Events.d.ts (with imports + descriptions)
+    const imports = packets.map(([n]) =>
+        `import type { ${toPacketName(n)} } from "./packets/${n}";`
+    ).join("\n");
 
-// Events.d.ts (with imports + descriptions)
-const imports = packets.map(([n]) =>
-    `import type { ${toPacketName(n)} } from "./packets/${n}";`
-).join("\n");
+    const interfaceBody = packets.map(([n]) => {
+        const ev = toEventKey(n);
+        const iface = toPacketName(n);
+        const mojang = mojangMeta.get(n);
+        const atomicId = extractAtomicId(n, types[n], protocol);
 
-const interfaceBody = packets.map(([n]) => {
-    const ev = toEventKey(n);
-    const iface = toPacketName(n);
-    const mojang = mojangMeta.get(n);
-    const atomicId = extractAtomicId(n, types[n], protocol);
+        const id = atomicId ?? mojang?.id;
+        const description = mojang?.description;
 
-    const id = atomicId ?? mojang?.id;
-    const description = mojang?.description;
+        const lines: string[] = [];
+        lines.push("  /**");
 
-    const lines: string[] = [];
-    lines.push("  /**");
+        if (description) {
+            lines.push(`   * ${description}`);
+        } else {
+            lines.push(`   * Event for ${iface}.`);
+        }
 
-    if (description) {
-        lines.push(`   * ${description}`);
-    } else {
-        lines.push(`   * Event for ${iface}.`);
-    }
+        if (id != null) {
+            lines.push(`   *`);
+            lines.push(`   * Packet ID: ${id}`);
+        }
 
-    if (id != null) {
-        lines.push(`   *`);
-        lines.push(`   * Packet ID: ${id}`);
-    }
+        lines.push("   */");
 
-    lines.push("   */");
-
-    return `
+        return `
 ${lines.join("\n")}
   "${ev}": (packet: ${iface}) => void;`;
-}).join("\n");
+    }).join("\n");
 
-const events = `
+    const events = `
 ${imports}
 
 export interface Events {
@@ -474,8 +486,14 @@ ${interfaceBody}
 }
 `;
 
-fs.writeFileSync(EVENTS_FILE, await prettier.format(events, { parser: "typescript" }));
+    fs.writeFileSync(EVENTS_FILE, await prettier.format(events, { parser: "typescript" }));
 
-console.log(`Generated ${packets.length} packet files`);
-console.log(`Injected Mojang metadata for ${mojangMeta.size} packets`);
-console.log("Done.");
+    console.log(`Generated ${packets.length} packet files`);
+    console.log(`Injected Mojang metadata for ${mojangMeta.size} packets`);
+    console.log("Done.");
+}
+
+main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+});

@@ -1,5 +1,5 @@
 
-export = {
+export default {
     Read: {
         optionalNbtType: ['parametrizable', (compiler: any, { tagType }: any) => {
             return compiler.wrapCode(`

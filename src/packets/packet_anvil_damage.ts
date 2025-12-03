@@ -4,12 +4,10 @@
  * Requests an anvil to be damaged.
  */
 
-
 export interface AnvilDamagePacket {
   damage: number;
   position: BlockCoordinates;
 }
-
 
 export interface BlockCoordinates {
   x: number;

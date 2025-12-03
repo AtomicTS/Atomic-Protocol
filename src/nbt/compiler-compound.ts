@@ -1,5 +1,5 @@
 
-export = {
+export default {
     Read: {
         compound: ['context', (buffer: Buffer, offset: number) => {
             const results = {

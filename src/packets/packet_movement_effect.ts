@@ -4,7 +4,6 @@
  * These packets are sent to the client to update specific MovementEffects
  */
 
-
 export interface MovementEffectPacket {
   runtime_id: Varint64;
   effect_type: MovementEffectType;
@@ -12,14 +11,13 @@ export interface MovementEffectPacket {
   tick: Varint64;
 }
 
-
 export type Varint64 = any;
-
 
 export type MovementEffectType = "GLIDE_BOOST" | "invalid";
 
 export const MovementEffectPacketInfo: import("./metadata").PacketMetadata = {
   id: 318,
   name: "movement_effect",
-  description: "These packets are sent to the client to update specific MovementEffects",
+  description:
+    "These packets are sent to the client to update specific MovementEffects",
 };

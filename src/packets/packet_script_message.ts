@@ -4,12 +4,10 @@
  * Used to send custom messages between client and server.
  */
 
-
 export interface ScriptMessagePacket {
   message_id: string;
   data: string;
 }
-
 
 export const ScriptMessagePacketInfo: import("./metadata").PacketMetadata = {
   id: 177,

@@ -4,11 +4,9 @@
  * No description
  */
 
-
 export interface SubClientLoginPacket {
   tokens: any;
 }
-
 
 export const SubClientLoginPacketInfo: import("./metadata").PacketMetadata = {
   id: undefined,

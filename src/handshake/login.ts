@@ -3,7 +3,7 @@ import { config } from "../config/config";
 import { nextUUID } from "../lib/functions";
 import { ClientOptions, PUBLIC_KEY } from "../types";
 
-export = (client: any, options: ClientOptions) => {
+export default (client: any, options: ClientOptions) => {
     const skinData = require("../config/steve.json");
 
     client.createClientChain = () => {

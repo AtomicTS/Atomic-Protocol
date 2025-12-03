@@ -4,11 +4,9 @@
  * No description
  */
 
-
 export interface SetEntityLinkPacket {
   link: Link;
 }
-
 
 export interface Link {
   ridden_entity_id: number;

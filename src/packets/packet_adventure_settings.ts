@@ -4,7 +4,6 @@
  * No description
  */
 
-
 export interface AdventureSettingsPacket {
   flags: AdventureFlags;
   command_permission: CommandPermissionLevelVarint;
@@ -14,21 +13,27 @@ export interface AdventureSettingsPacket {
   user_id: number;
 }
 
-
-export type AdventureFlags = {  world_immutable: boolean;
+export type AdventureFlags = {
+  world_immutable: boolean;
   no_pvp: boolean;
   auto_jump: boolean;
   allow_flight: boolean;
   no_clip: boolean;
   world_builder: boolean;
   flying: boolean;
-  muted: boolean;};
+  muted: boolean;
+};
 
+export type CommandPermissionLevelVarint =
+  | "normal"
+  | "operator"
+  | "automation"
+  | "host"
+  | "owner"
+  | "internal";
 
-export type CommandPermissionLevelVarint = "normal" | "operator" | "automation" | "host" | "owner" | "internal";
-
-
-export type ActionPermissions = {  mine: boolean;
+export type ActionPermissions = {
+  mine: boolean;
   doors_and_switches: boolean;
   open_containers: boolean;
   attack_players: boolean;
@@ -36,13 +41,14 @@ export type ActionPermissions = {  mine: boolean;
   operator: boolean;
   teleport: boolean;
   build: boolean;
-  default: boolean;};
-
+  default: boolean;
+};
 
 export type PermissionLevel = "visitor" | "member" | "operator" | "custom";
 
-export const AdventureSettingsPacketInfo: import("./metadata").PacketMetadata = {
-  id: undefined,
-  name: "adventure_settings",
-  description: undefined,
-};
+export const AdventureSettingsPacketInfo: import("./metadata").PacketMetadata =
+  {
+    id: undefined,
+    name: "adventure_settings",
+    description: undefined,
+  };

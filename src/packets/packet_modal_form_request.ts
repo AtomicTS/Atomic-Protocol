@@ -4,12 +4,10 @@
  * Modal Form Request
  */
 
-
 export interface ModalFormRequestPacket {
   form_id: number;
   data: string;
 }
-
 
 export const ModalFormRequestPacketInfo: import("./metadata").PacketMetadata = {
   id: 100,

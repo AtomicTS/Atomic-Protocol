@@ -7,3 +7,4 @@ test
 start.sh
 src/tests
 auth
+.vscode

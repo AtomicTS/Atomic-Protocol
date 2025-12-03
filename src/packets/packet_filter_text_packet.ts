@@ -4,12 +4,10 @@
  * No description
  */
 
-
 export interface FilterTextPacketPacket {
   text: string;
   from_server: boolean;
 }
-
 
 export const FilterTextPacketPacketInfo: import("./metadata").PacketMetadata = {
   id: undefined,

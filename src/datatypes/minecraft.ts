@@ -157,7 +157,7 @@ function sizeOfEndOfArray(value: any, typeArgs: any) {
     return size;
 };
 
-export = {
+export default {
     uuid: [readUUID, writeUUID, 16],
     nbt: [readNbt, writeNbt, sizeOfNbt],
     lnbt: [readNbtLE, writeNbtLE, sizeOfNbtLE],

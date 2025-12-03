@@ -4,11 +4,9 @@
  * Add Behavior Tree
  */
 
-
 export interface AddBehaviorTreePacket {
   behaviortree: string;
 }
-
 
 export const AddBehaviorTreePacketInfo: import("./metadata").PacketMetadata = {
   id: 89,

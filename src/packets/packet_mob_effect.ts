@@ -4,7 +4,6 @@
  * Mob Effect
  */
 
-
 export interface MobEffectPacket {
   runtime_entity_id: Varint64;
   event_id: "add" | "update" | "remove";
@@ -14,7 +13,6 @@ export interface MobEffectPacket {
   duration: number;
   tick: Varint64;
 }
-
 
 export type Varint64 = any;
 

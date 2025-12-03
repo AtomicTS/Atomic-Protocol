@@ -4,7 +4,6 @@
  * No description
  */
 
-
 export interface LevelSoundEventOldPacket {
   sound_id: number;
   position: Vec3f;
@@ -14,15 +13,15 @@ export interface LevelSoundEventOldPacket {
   is_global: boolean;
 }
 
-
 export interface Vec3f {
   x: number;
   y: number;
   z: number;
 }
 
-export const LevelSoundEventOldPacketInfo: import("./metadata").PacketMetadata = {
-  id: undefined,
-  name: "level_sound_event_old",
-  description: undefined,
-};
+export const LevelSoundEventOldPacketInfo: import("./metadata").PacketMetadata =
+  {
+    id: undefined,
+    name: "level_sound_event_old",
+    description: undefined,
+  };

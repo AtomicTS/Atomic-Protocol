@@ -4,13 +4,11 @@
  * No description
  */
 
-
 export interface ToggleCrafterSlotRequestPacket {
   position: Vec3li;
   slot: number;
   disabled: boolean;
 }
-
 
 export interface Vec3li {
   x: number;
@@ -18,8 +16,9 @@ export interface Vec3li {
   z: number;
 }
 
-export const ToggleCrafterSlotRequestPacketInfo: import("./metadata").PacketMetadata = {
-  id: undefined,
-  name: "toggle_crafter_slot_request",
-  description: undefined,
-};
+export const ToggleCrafterSlotRequestPacketInfo: import("./metadata").PacketMetadata =
+  {
+    id: undefined,
+    name: "toggle_crafter_slot_request",
+    description: undefined,
+  };

@@ -4,11 +4,9 @@
  * No description
  */
 
-
 export interface RiderJumpPacket {
   jump_strength: number;
 }
-
 
 export const RiderJumpPacketInfo: import("./metadata").PacketMetadata = {
   id: undefined,

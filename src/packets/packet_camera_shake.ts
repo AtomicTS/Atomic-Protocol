@@ -4,7 +4,6 @@
  * Used to control trigger camera shake movements on the client's player camera
  */
 
-
 export interface CameraShakePacket {
   intensity: number;
   duration: number;
@@ -12,9 +11,9 @@ export interface CameraShakePacket {
   action: "add" | "stop";
 }
 
-
 export const CameraShakePacketInfo: import("./metadata").PacketMetadata = {
   id: 159,
   name: "camera_shake",
-  description: "Used to control trigger camera shake movements on the client's player camera",
+  description:
+    "Used to control trigger camera shake movements on the client's player camera",
 };

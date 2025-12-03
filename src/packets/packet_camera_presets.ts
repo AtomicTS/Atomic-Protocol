@@ -4,11 +4,9 @@
  * Used to sync CameraPresets data from server to clients.
  */
 
-
 export interface CameraPresetsPacket {
   presets: CameraPresets[];
 }
-
 
 export interface CameraPresets {
   name: string;
@@ -28,13 +26,20 @@ export interface CameraPresets {
   yaw_limit_max: number | null;
   audio_listener: number | null;
   player_effects: boolean | null;
-  aim_assist: {  preset_id: string | null;
-  target_mode: "angle" | "distance" | null;
-  angle: Vec2f | null;
-  distance: number | null;} | null;
-  control_scheme: "locked_player_relative_strafe" | "camera_relative" | "camera_relative_strafe" | "player_relative" | "player_relative_strafe" | null;
+  aim_assist: {
+    preset_id: string | null;
+    target_mode: "angle" | "distance" | null;
+    angle: Vec2f | null;
+    distance: number | null;
+  } | null;
+  control_scheme:
+    | "locked_player_relative_strafe"
+    | "camera_relative"
+    | "camera_relative_strafe"
+    | "player_relative"
+    | "player_relative_strafe"
+    | null;
 }
-
 
 export interface Vec3fopts {
   x: number | null;
@@ -42,18 +47,15 @@ export interface Vec3fopts {
   z: number | null;
 }
 
-
 export interface Vec2fopts {
   x: number | null;
   y: number | null;
 }
 
-
 export interface Vec2f {
   x: number;
   z: number;
 }
-
 
 export interface Vec3f {
   x: number;

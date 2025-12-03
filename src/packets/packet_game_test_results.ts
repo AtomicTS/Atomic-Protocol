@@ -4,13 +4,11 @@
  * Game Test Results Packet
  */
 
-
 export interface GameTestResultsPacket {
   succeeded: boolean;
   error: string;
   name: string;
 }
-
 
 export const GameTestResultsPacketInfo: import("./metadata").PacketMetadata = {
   id: 195,

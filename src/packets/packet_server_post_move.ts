@@ -4,11 +4,9 @@
  * No description
  */
 
-
 export interface ServerPostMovePacket {
   position: Vec3f;
 }
-
 
 export interface Vec3f {
   x: number;

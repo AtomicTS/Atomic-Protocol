@@ -4,7 +4,6 @@
  * UpdateAdventureSettingsPacket
  */
 
-
 export interface UpdateAdventureSettingsPacket {
   no_pvm: boolean;
   no_mvp: boolean;
@@ -13,9 +12,9 @@ export interface UpdateAdventureSettingsPacket {
   auto_jump: boolean;
 }
 
-
-export const UpdateAdventureSettingsPacketInfo: import("./metadata").PacketMetadata = {
-  id: 188,
-  name: "update_adventure_settings",
-  description: "UpdateAdventureSettingsPacket",
-};
+export const UpdateAdventureSettingsPacketInfo: import("./metadata").PacketMetadata =
+  {
+    id: 188,
+    name: "update_adventure_settings",
+    description: "UpdateAdventureSettingsPacket",
+  };

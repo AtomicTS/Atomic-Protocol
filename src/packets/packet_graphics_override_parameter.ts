@@ -4,7 +4,6 @@
  * Sent from the server to the client when a server script changes the rendering settings
  */
 
-
 export interface GraphicsOverrideParameterPacket {
   values: ParameterKeyframeValue[];
   biome_identifier: string;
@@ -12,15 +11,12 @@ export interface GraphicsOverrideParameterPacket {
   reset: boolean;
 }
 
-
 export interface ParameterKeyframeValue {
   time: number;
   value: Vec3f;
 }
 
-
 export type GraphicsOverrideParameterType = "sky_zenith_color";
-
 
 export interface Vec3f {
   x: number;
@@ -28,8 +24,10 @@ export interface Vec3f {
   z: number;
 }
 
-export const GraphicsOverrideParameterPacketInfo: import("./metadata").PacketMetadata = {
-  id: 331,
-  name: "graphics_override_parameter",
-  description: "Sent from the server to the client when a server script changes the rendering settings",
-};
+export const GraphicsOverrideParameterPacketInfo: import("./metadata").PacketMetadata =
+  {
+    id: 331,
+    name: "graphics_override_parameter",
+    description:
+      "Sent from the server to the client when a server script changes the rendering settings",
+  };

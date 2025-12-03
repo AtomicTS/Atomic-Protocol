@@ -4,11 +4,9 @@
  * Player Fog Packet
  */
 
-
 export interface PlayerFogPacket {
   stack: string[];
 }
-
 
 export const PlayerFogPacketInfo: import("./metadata").PacketMetadata = {
   id: 160,

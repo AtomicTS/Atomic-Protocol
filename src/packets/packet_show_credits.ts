@@ -4,12 +4,10 @@
  * Starts on server when the credits screen should pop up.
  */
 
-
 export interface ShowCreditsPacket {
   runtime_entity_id: Varint64;
   status: number;
 }
-
 
 export type Varint64 = any;
 

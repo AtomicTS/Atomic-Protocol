@@ -4,7 +4,6 @@
  * No description
  */
 
-
 export interface StartGamePacket {
   entity_id: number;
   runtime_entity_id: Varint64;
@@ -87,12 +86,16 @@ export interface StartGamePacket {
   server_controlled_sound: boolean;
 }
 
-
 export type Varint64 = any;
 
-
-export type GameMode = "survival" | "creative" | "adventure" | "survival_spectator" | "creative_spectator" | "fallback" | "spectator";
-
+export type GameMode =
+  | "survival"
+  | "creative"
+  | "adventure"
+  | "survival_spectator"
+  | "creative_spectator"
+  | "fallback"
+  | "spectator";
 
 export interface Vec3f {
   x: number;
@@ -100,12 +103,10 @@ export interface Vec3f {
   z: number;
 }
 
-
 export interface Vec2f {
   x: number;
   z: number;
 }
-
 
 export interface BlockCoordinates {
   x: number;
@@ -113,33 +114,28 @@ export interface BlockCoordinates {
   z: number;
 }
 
-
 export interface GameRuleVarint {
   name: string;
   editable: boolean;
   type: "bool" | "int" | "float";
-  value: { type: "bool"; value: boolean } | { type: "int"; value: number } | { type: "float"; value: number };
+  value:
+    | { type: "bool"; value: boolean }
+    | { type: "int"; value: number }
+    | { type: "float"; value: number };
 }
-
 
 export type Experiments = Experiment[];
 
-
 export type PermissionLevel = "visitor" | "member" | "operator" | "custom";
-
 
 export interface EducationSharedResourceURI {
   button_name: string;
   link_uri: string;
 }
 
-
-export type BlockProperties = {  name: string;
-  state: Nbt;}[];
-
+export type BlockProperties = { name: string; state: Nbt }[];
 
 export type Nbt = any;
-
 
 export interface Experiment {
   name: string;

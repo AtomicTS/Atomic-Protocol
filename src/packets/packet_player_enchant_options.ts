@@ -4,11 +4,9 @@
  * No description
  */
 
-
 export interface PlayerEnchantOptionsPacket {
   options: EnchantOption[];
 }
-
 
 export interface EnchantOption {
   cost: number;
@@ -20,14 +18,14 @@ export interface EnchantOption {
   option_id: number;
 }
 
-
 export interface Enchant {
   id: number;
   level: number;
 }
 
-export const PlayerEnchantOptionsPacketInfo: import("./metadata").PacketMetadata = {
-  id: undefined,
-  name: "player_enchant_options",
-  description: undefined,
-};
+export const PlayerEnchantOptionsPacketInfo: import("./metadata").PacketMetadata =
+  {
+    id: undefined,
+    name: "player_enchant_options",
+    description: undefined,
+  };

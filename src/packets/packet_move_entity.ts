@@ -4,7 +4,6 @@
  * No description
  */
 
-
 export interface MoveEntityPacket {
   runtime_entity_id: Varint64;
   flags: number;
@@ -12,9 +11,7 @@ export interface MoveEntityPacket {
   rotation: Rotation;
 }
 
-
 export type Varint64 = any;
-
 
 export interface Vec3f {
   x: number;
@@ -22,13 +19,11 @@ export interface Vec3f {
   z: number;
 }
 
-
 export interface Rotation {
   yaw: Byterot;
   pitch: Byterot;
   head_yaw: Byterot;
 }
-
 
 export type Byterot = any;
 

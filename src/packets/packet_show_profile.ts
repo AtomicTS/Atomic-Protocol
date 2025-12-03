@@ -4,11 +4,9 @@
  * Show Profile
  */
 
-
 export interface ShowProfilePacket {
   xuid: string;
 }
-
 
 export const ShowProfilePacketInfo: import("./metadata").PacketMetadata = {
   id: 104,

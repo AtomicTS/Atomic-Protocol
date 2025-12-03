@@ -4,15 +4,11 @@
  * No description
  */
 
-
 export interface SubchunkRequestPacket {
   dimension: number;
   origin: Vec3i;
-  requests: {  dx: number;
-  dy: number;
-  dz: number;}[];
+  requests: { dx: number; dy: number; dz: number }[];
 }
-
 
 export interface Vec3i {
   x: number;

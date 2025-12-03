@@ -4,13 +4,11 @@
  * Lesson Progress
  */
 
-
 export interface LessonProgressPacket {
   action: number;
   score: number;
   identifier: string;
 }
-
 
 export const LessonProgressPacketInfo: import("./metadata").PacketMetadata = {
   id: 183,

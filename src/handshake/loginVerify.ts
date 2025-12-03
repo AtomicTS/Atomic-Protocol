@@ -4,7 +4,7 @@ import { config } from "../config/config";
 import { PUBLIC_KEY } from "../types";
 import { Logger } from "../utils/logger";
 
-export = (client: any) => {
+export default (client: any) => {
     const getDER = (b64: any) => crypto.createPublicKey({ key: Buffer.from(b64, 'base64'), format: 'der', type: 'spki' });
 
     client.decodeLoginJWT = (authTokens: string[], skinTokens: string) => {

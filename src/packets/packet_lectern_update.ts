@@ -4,13 +4,11 @@
  * This is used for the Lectern Block Actor.
  */
 
-
 export interface LecternUpdatePacket {
   page: number;
   page_count: number;
   position: Vec3i;
 }
-
 
 export interface Vec3i {
   x: number;

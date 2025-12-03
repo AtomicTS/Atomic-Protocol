@@ -4,7 +4,6 @@
  * No description
  */
 
-
 export interface LevelChunkPacket {
   x: number;
   z: number;
@@ -12,10 +11,9 @@ export interface LevelChunkPacket {
   sub_chunk_count: number;
   highest_subchunk_count: { sub_chunk_count: "-2"; value: number };
   cache_enabled: boolean;
-  blobs: { cache_enabled: "true";   hashes: number[];};
+  blobs: { cache_enabled: "true"; hashes: number[] };
   payload: ByteArray;
 }
-
 
 export type ByteArray = any;
 

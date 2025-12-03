@@ -4,7 +4,6 @@
  * Internal Text Packet
  */
 
-
 export interface GameTestRequestPacket {
   max_tests_per_batch: number;
   repetitions: number;
@@ -14,7 +13,6 @@ export interface GameTestRequestPacket {
   tests_per_row: number;
   name: string;
 }
-
 
 export interface BlockCoordinates {
   x: number;

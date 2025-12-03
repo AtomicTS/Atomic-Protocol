@@ -4,7 +4,6 @@
  * CameraAimAssist
  */
 
-
 export interface CameraAimAssistPacket {
   preset_id: string;
   view_angle: Vec2f;
@@ -13,7 +12,6 @@ export interface CameraAimAssistPacket {
   action: "set" | "clear";
   show_debug_render: boolean;
 }
-
 
 export interface Vec2f {
   x: number;

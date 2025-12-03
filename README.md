@@ -1,4 +1,5 @@
 # Atomic Protocol
+[![NPM version](https://img.shields.io/npm/v/atomic-protocol.svg?logo=npm)](http://npmjs.com/package/atomic-protocol)
 
 [Our Docs](./docs/API.md)
 

@@ -4,7 +4,6 @@
  * No description
  */
 
-
 export interface StructureBlockUpdatePacket {
   position: BlockCoordinates;
   structure_name: string;
@@ -19,13 +18,11 @@ export interface StructureBlockUpdatePacket {
   water_logged: boolean;
 }
 
-
 export interface BlockCoordinates {
   x: number;
   y: number;
   z: number;
 }
-
 
 export interface StructureBlockSettings {
   palette_name: string;
@@ -44,15 +41,15 @@ export interface StructureBlockSettings {
   pivot: Vec3f;
 }
 
-
 export interface Vec3f {
   x: number;
   y: number;
   z: number;
 }
 
-export const StructureBlockUpdatePacketInfo: import("./metadata").PacketMetadata = {
-  id: undefined,
-  name: "structure_block_update",
-  description: undefined,
-};
+export const StructureBlockUpdatePacketInfo: import("./metadata").PacketMetadata =
+  {
+    id: undefined,
+    name: "structure_block_update",
+    description: undefined,
+  };

@@ -4,11 +4,9 @@
  * Sent from client to server
  */
 
-
 export interface PurchaseReceiptPacket {
   receipts: string[];
 }
-
 
 export const PurchaseReceiptPacketInfo: import("./metadata").PacketMetadata = {
   id: 92,

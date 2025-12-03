@@ -4,18 +4,17 @@
  * Item data from the server. Contains component information.
  */
 
-
 export interface ItemRegistryPacket {
   itemstates: Itemstates;
 }
 
-
-export type Itemstates = {  name: string;
+export type Itemstates = {
+  name: string;
   runtime_id: number;
   component_based: boolean;
   version: "legacy" | "data_driven" | "none";
-  nbt: Nbt;}[];
-
+  nbt: Nbt;
+}[];
 
 export type Nbt = any;
 

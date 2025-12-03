@@ -1,4 +1,3 @@
-import { FullPacketParser, Serializer } from "protodef";
 import { config } from "../config/config";
 import { Events } from '../Events';
 import { keyExchange } from "../handshake/keyExchange";
@@ -15,12 +14,8 @@ import { authenticate, AuthenticationType } from "./auth";
 import { Connection } from "./connection";
 
 export class Client extends Connection {
-    connection!: RaknetClient | NethernetClient;
-
     public features: any;
     public options: ClientOptions;
-    public deserializer!: FullPacketParser;
-    public serializer!: Serializer;
     public startGameData: any;
     public clientRuntimeId: any;
     public tick = 0n;

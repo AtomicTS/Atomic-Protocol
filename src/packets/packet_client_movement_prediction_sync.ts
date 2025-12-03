@@ -4,12 +4,9 @@
  * No description
  */
 
-
 export interface ClientMovementPredictionSyncPacket {
-  data_flags: Varint128;
-  bounding_box: {  scale: number;
-  width: number;
-  height: number;};
+  data_flags: bigint;
+  bounding_box: { scale: number; width: number; height: number };
   movement_speed: number;
   underwater_movement_speed: number;
   lava_movement_speed: number;
@@ -20,11 +17,11 @@ export interface ClientMovementPredictionSyncPacket {
   is_flying: boolean;
 }
 
-
 export type Varint64 = any;
 
-export const ClientMovementPredictionSyncPacketInfo: import("./metadata").PacketMetadata = {
-  id: undefined,
-  name: "client_movement_prediction_sync",
-  description: undefined,
-};
+export const ClientMovementPredictionSyncPacketInfo: import("./metadata").PacketMetadata =
+  {
+    id: undefined,
+    name: "client_movement_prediction_sync",
+    description: undefined,
+  };

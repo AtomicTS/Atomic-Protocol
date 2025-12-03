@@ -4,11 +4,9 @@
  * Set Difficulty
  */
 
-
 export interface SetDifficultyPacket {
   difficulty: number;
 }
-
 
 export const SetDifficultyPacketInfo: import("./metadata").PacketMetadata = {
   id: 60,

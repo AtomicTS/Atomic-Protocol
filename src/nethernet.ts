@@ -1,4 +1,4 @@
-import { Client, Connection } from "atomic-nethernet";
+import { Client, Connection } from "atomic-net";
 
 export class NethernetClient {
   connected: boolean;

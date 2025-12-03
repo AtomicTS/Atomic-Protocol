@@ -4,12 +4,10 @@
  * No description
  */
 
-
 export interface BiomeDefinitionListPacket {
   biome_definitions: BiomeDefinition[];
   string_list: string[];
 }
-
 
 export interface BiomeDefinition {
   name_index: number;
@@ -24,7 +22,6 @@ export interface BiomeDefinition {
   tags: number[] | null;
   chunk_generation: BiomeChunkGeneration | null;
 }
-
 
 export interface BiomeChunkGeneration {
   climate: BiomeClimate | null;
@@ -44,14 +41,12 @@ export interface BiomeChunkGeneration {
   replacements_data: BiomeReplacementData[] | null;
 }
 
-
 export interface BiomeClimate {
   temperature: number;
   downfall: number;
   snow_accumulation_min: number;
   snow_accumulation_max: number;
 }
-
 
 export interface BiomeConsolidatedFeature {
   scatter: BiomeScatterParameter;
@@ -61,7 +56,6 @@ export interface BiomeConsolidatedFeature {
   can_use_internal: boolean;
 }
 
-
 export interface BiomeMountainParameters {
   steep_block: number;
   north_slopes: boolean;
@@ -70,7 +64,6 @@ export interface BiomeMountainParameters {
   east_slopes: boolean;
   top_slide_enabled: boolean;
 }
-
 
 export interface BiomeElementData {
   noise_frequency_scale: number;
@@ -83,7 +76,6 @@ export interface BiomeElementData {
   adjusted_materials: BiomeSurfaceMaterial;
 }
 
-
 export interface BiomeSurfaceMaterial {
   top_block: number;
   mid_block: number;
@@ -93,14 +85,12 @@ export interface BiomeSurfaceMaterial {
   sea_floor_depth: number;
 }
 
-
 export interface BiomeMesaSurface {
   clay_material: number;
   hard_clay_material: number;
   bryce_pillars: boolean;
   has_forest: boolean;
 }
-
 
 export interface BiomeCappedSurface {
   floor_blocks: number[];
@@ -109,7 +99,6 @@ export interface BiomeCappedSurface {
   foundation_block: number | null;
   beach_block: number | null;
 }
-
 
 export interface BiomeOverworldRules {
   hills_transformations: BiomeWeight[];
@@ -121,7 +110,6 @@ export interface BiomeOverworldRules {
   climate_transformations: BiomeTemperatureWeight[];
 }
 
-
 export interface BiomeMultiNoiseRules {
   temperature: number;
   humidity: number;
@@ -130,13 +118,11 @@ export interface BiomeMultiNoiseRules {
   weight: number;
 }
 
-
 export interface BiomeConditionalTransformation {
   weighted_biomes: BiomeWeight[];
   condition_json: number;
   min_passing_neighbours: number;
 }
-
 
 export interface BiomeReplacementData {
   biome: number;
@@ -147,18 +133,15 @@ export interface BiomeReplacementData {
   replacement_index: number;
 }
 
-
 export interface BiomeWeight {
   biome: number;
   weight: number;
 }
 
-
 export interface BiomeTemperatureWeight {
   temperature: number;
   weight: number;
 }
-
 
 export interface BiomeScatterParameter {
   coordinates: BiomeCoordinate[];
@@ -171,7 +154,6 @@ export interface BiomeScatterParameter {
   iterations: number;
 }
 
-
 export interface BiomeCoordinate {
   min_value_type: number;
   min_value: number;
@@ -179,11 +161,19 @@ export interface BiomeCoordinate {
   max_value: number;
   grid_offset: number;
   grid_step_size: number;
-  distribution: "single_valued" | "uniform" | "gaussian" | "inverse_gaussian" | "fixed_grid" | "jittered_grid" | "triangle";
+  distribution:
+    | "single_valued"
+    | "uniform"
+    | "gaussian"
+    | "inverse_gaussian"
+    | "fixed_grid"
+    | "jittered_grid"
+    | "triangle";
 }
 
-export const BiomeDefinitionListPacketInfo: import("./metadata").PacketMetadata = {
-  id: undefined,
-  name: "biome_definition_list",
-  description: undefined,
-};
+export const BiomeDefinitionListPacketInfo: import("./metadata").PacketMetadata =
+  {
+    id: undefined,
+    name: "biome_definition_list",
+    description: undefined,
+  };

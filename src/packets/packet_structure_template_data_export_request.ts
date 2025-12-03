@@ -4,21 +4,22 @@
  * No description
  */
 
-
 export interface StructureTemplateDataExportRequestPacket {
   name: string;
   position: BlockCoordinates;
   settings: StructureBlockSettings;
-  request_type: "export_from_save" | "export_from_load" | "query_saved_structure" | "import_from_save";
+  request_type:
+    | "export_from_save"
+    | "export_from_load"
+    | "query_saved_structure"
+    | "import_from_save";
 }
-
 
 export interface BlockCoordinates {
   x: number;
   y: number;
   z: number;
 }
-
 
 export interface StructureBlockSettings {
   palette_name: string;
@@ -37,15 +38,15 @@ export interface StructureBlockSettings {
   pivot: Vec3f;
 }
 
-
 export interface Vec3f {
   x: number;
   y: number;
   z: number;
 }
 
-export const StructureTemplateDataExportRequestPacketInfo: import("./metadata").PacketMetadata = {
-  id: undefined,
-  name: "structure_template_data_export_request",
-  description: undefined,
-};
+export const StructureTemplateDataExportRequestPacketInfo: import("./metadata").PacketMetadata =
+  {
+    id: undefined,
+    name: "structure_template_data_export_request",
+    description: undefined,
+  };

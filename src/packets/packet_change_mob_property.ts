@@ -4,7 +4,6 @@
  * packet containing data for changing mob property
  */
 
-
 export interface ChangeMobPropertyPacket {
   entity_unique_id: number;
   property: string;
@@ -14,9 +13,9 @@ export interface ChangeMobPropertyPacket {
   float_value: number;
 }
 
-
-export const ChangeMobPropertyPacketInfo: import("./metadata").PacketMetadata = {
-  id: 182,
-  name: "change_mob_property",
-  description: "packet containing data for changing mob property",
-};
+export const ChangeMobPropertyPacketInfo: import("./metadata").PacketMetadata =
+  {
+    id: 182,
+    name: "change_mob_property",
+    description: "packet containing data for changing mob property",
+  };
