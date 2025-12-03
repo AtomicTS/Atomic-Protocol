@@ -1,4 +1,4 @@
-name: Bedrock Watcher
+name: Update Helper
 
 on:
   schedule:
