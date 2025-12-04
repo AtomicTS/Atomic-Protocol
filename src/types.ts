@@ -51,6 +51,7 @@ export interface ClientOptions {
     transport?: string;
     useSignalling?: boolean;
     autoReconnect?: boolean;
+    signalLiveness?: boolean;
 
 }
 

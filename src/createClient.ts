@@ -33,6 +33,7 @@ export const createClient = (options: ClientOptions) => {
         followPort: !options.realmId,
         protocolVersion: config.protocol,
         version: config.minecraftVersion,
+        signalLiveness: false,
         transport,
         ...options
     });
@@ -76,8 +77,13 @@ async function connect(client: Client) {
                     await client.nethernet.signalling.destroy();
                 } catch { }
             }
-            //@ts-ignore
-            client.nethernet.signalling = new NethernetSignal(client.connection.nethernet.networkId, client.options.authflow, client.options.version);
+            client.nethernet.signalling = new NethernetSignal(
+                //@ts-ignore
+                client.connection.nethernet.networkId,
+                client.options.authflow,
+                client.options.version!,
+                { liveness: client.options.signalLiveness }
+            );
 
             //@ts-ignore
             await client.nethernet.signalling.connect();

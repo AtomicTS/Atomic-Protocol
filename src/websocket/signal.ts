@@ -33,6 +33,10 @@ const PING_INTERVAL_MS = 2000;
 const PING_TIMEOUT_MS = 60000;
 const CREDENTIALS_TIMEOUT_MS = 15000;
 
+type SignalOptions = {
+    liveness?: boolean;
+};
+
 export class NethernetSignal extends EventEmitter {
     public networkId: string;
     public authflow: AuthflowLike;
@@ -44,12 +48,14 @@ export class NethernetSignal extends EventEmitter {
     private retryCount = 0;
     private destroyed = false;
     private lastLiveness = 0;
+    private livenessEnabled: boolean;
 
-    constructor(networkId: string, authflow: AuthflowLike, version: string) {
+    constructor(networkId: string, authflow: AuthflowLike, version: string, options?: SignalOptions) {
         super();
         this.networkId = networkId;
         this.authflow = authflow;
         this.version = version;
+        this.livenessEnabled = options?.liveness ?? true;
     }
 
     async connect() {
@@ -140,7 +146,7 @@ export class NethernetSignal extends EventEmitter {
         ws.on("error", (err) => this.onError(err as Error));
         ws.on("message", (data) => this.onMessage(data as any));
 
-        if (!this.pingInterval) {
+        if (this.livenessEnabled && !this.pingInterval) {
             this.pingInterval = setInterval(() => {
                 if (!this.ws || this.ws.readyState !== WebSocket.OPEN) return;
 
