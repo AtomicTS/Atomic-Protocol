@@ -50,9 +50,6 @@ export interface ClientOptions {
     networkId?: bigint;
     transport?: string;
     useSignalling?: boolean;
-    autoReconnect?: boolean;
-    signalLiveness?: boolean;
-
 }
 
 export enum CompressionAlgorithm {

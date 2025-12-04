@@ -1,5 +1,4 @@
 import assert from "assert";
-import { SignalType } from "atomic-net";
 import { realmAuth } from "./client/auth";
 import { Client } from "./client/client";
 import { config } from "./config/config";
@@ -33,7 +32,6 @@ export const createClient = (options: ClientOptions) => {
         followPort: !options.realmId,
         protocolVersion: config.protocol,
         version: config.minecraftVersion,
-        signalLiveness: false,
         transport,
         ...options
     });
@@ -70,58 +68,23 @@ export const createClient = (options: ClientOptions) => {
 async function connect(client: Client) {
     if (client.options.transport === "nethernet") {
         if (client.options.useSignalling) {
-            //@ts-ignore
-            if (client.nethernet.signalling) {
-                try {
-                    //@ts-ignore
-                    await client.nethernet.signalling.destroy();
-                } catch { }
-            }
             client.nethernet.signalling = new NethernetSignal(
                 //@ts-ignore
                 client.connection.nethernet.networkId,
                 client.options.authflow,
-                client.options.version!,
-                { liveness: client.options.signalLiveness }
+                client.options.version!
             );
 
             //@ts-ignore
             await client.nethernet.signalling.connect();
 
-            const updateCredentials = (creds: any[]) => {
-                if (!Array.isArray(creds) || creds.length === 0) {
-                    Logger.debug("Ignoring empty TURN credentials update", config.debug);
-                    return;
-                }
-                //@ts-ignore
-                client.connection.nethernet.credentials = creds;
-                //@ts-ignore
-                Logger.debug(`Updated TURN credentials: ${JSON.stringify(client.connection.nethernet.credentials, null, 2)}`, config.debug);
-            };
-
-            updateCredentials(client.nethernet.signalling.credentials);
-
+            //@ts-ignore
+            client.connection.nethernet.credentials = client.nethernet.signalling.credentials;
             //@ts-ignore
             client.connection.nethernet.signalHandler = client.nethernet.signalling.write.bind(client.nethernet.signalling);
-            //@ts-ignore
-            client.nethernet.signalling.removeAllListeners('signal');
-            //@ts-ignore
-            client.nethernet.signalling.on('signal', signal => {
-                if (signal.type === SignalType.ConnectRequest) {
-                    //@ts-ignore
-                    client.connection.nethernet.handleRemoteOffer(signal);
-                } else {
-                    //@ts-ignore
-                    client.connection.nethernet.handleSignal(signal);
-                }
-            });
 
             //@ts-ignore
-            client.nethernet.signalling.removeAllListeners('credentials');
-            //@ts-ignore
-            client.nethernet.signalling.on('credentials', (creds: any[]) => {
-                updateCredentials(creds);
-            });
+            client.nethernet.signalling.on('signal', signal => client.connection.nethernet.handleSignal(signal));
         } else {
             await client.connection.ping();
         }

@@ -1,6 +1,7 @@
 import type { IceServer } from "atomic-net";
 import { SignalStructure } from "atomic-net";
 import { EventEmitter, once } from "node:events";
+import { Authflow } from "prismarine-auth";
 import { RawData, WebSocket } from "ws";
 import { config } from "../config/config";
 import { Logger } from "../utils/logger";
@@ -24,38 +25,20 @@ type ParsedIceUrl = {
     isTurn: boolean;
 };
 
-type AuthflowLike = {
-    getMinecraftBedrockServicesToken(args: { version: string; }): Promise<{ mcToken: string; }>;
-};
-
-const MAX_RETRIES = 5;
-const PING_INTERVAL_MS = 2000;
-const PING_TIMEOUT_MS = 60000;
-const CREDENTIALS_TIMEOUT_MS = 15000;
-
-type SignalOptions = {
-    liveness?: boolean;
-};
-
 export class NethernetSignal extends EventEmitter {
     public networkId: string;
-    public authflow: AuthflowLike;
+    public authflow: Authflow;
     public version: string;
     public ws: WebSocket | null = null;
     public credentials: IceServer[] = [];
 
-    private pingInterval: NodeJS.Timeout | null = null;
-    private retryCount = 0;
     private destroyed = false;
-    private lastLiveness = 0;
-    private livenessEnabled: boolean;
 
-    constructor(networkId: string, authflow: AuthflowLike, version: string, options?: SignalOptions) {
+    constructor(networkId: string, authflow: Authflow, version: string) {
         super();
         this.networkId = networkId;
         this.authflow = authflow;
         this.version = version;
-        this.livenessEnabled = options?.liveness ?? true;
     }
 
     async connect() {
@@ -66,20 +49,15 @@ export class NethernetSignal extends EventEmitter {
         await Promise.race([
             once(this, "credentials"),
             new Promise((_, reject) =>
-                setTimeout(() => reject(new Error("Timed out waiting for credentials")), CREDENTIALS_TIMEOUT_MS)
+                setTimeout(() => reject(new Error("Timed out waiting for credentials")), 15000)
             )
         ]);
     }
 
-    async destroy(resume = false) {
+    async destroy() {
         Logger.debug('Disconnecting from Signal', config.debug);
 
-        this.destroyed = !resume;
-
-        if (this.pingInterval) {
-            clearInterval(this.pingInterval);
-            this.pingInterval = null;
-        }
+        this.destroyed = true;
 
         const ws = this.ws;
         this.ws = null;
@@ -104,30 +82,6 @@ export class NethernetSignal extends EventEmitter {
             }
         }
 
-        if (resume) {
-            return this.reconnectWithBackoff();
-        }
-    }
-
-    private async reconnectWithBackoff() {
-        if (this.retryCount >= MAX_RETRIES) {
-            Logger.debug("Max retries reached for Signal", config.debug);
-            this.emit("error", new Error("Signal reconnection failed after max retries"));
-            return;
-        }
-
-        const base = 500;
-        const delay = Math.min(1000 * 10, base * 2 ** this.retryCount);
-        const jitter = Math.floor(Math.random() * 200);
-        Logger.debug(`Signal reconnect attempt #${this.retryCount + 1} in ${delay + jitter}ms`, config.debug);
-
-        await new Promise((r) => setTimeout(r, delay + jitter));
-
-        try {
-            await this.init();
-        } catch (e) {
-            Logger.debug(`Signal init failed on reconnect: ${String(e)}`, config.debug);
-        }
     }
 
     async init() {
@@ -139,35 +93,15 @@ export class NethernetSignal extends EventEmitter {
 
         const ws = new WebSocket(address, { headers: { Authorization: xbl.mcToken } });
         this.ws = ws;
-        this.lastLiveness = Date.now();
 
         ws.on("open", () => this.onOpen());
         ws.on("close", (code, reason) => this.onClose(code, reason.toString()));
         ws.on("error", (err) => this.onError(err as Error));
         ws.on("message", (data) => this.onMessage(data as any));
-
-        if (this.livenessEnabled && !this.pingInterval) {
-            this.pingInterval = setInterval(() => {
-                if (!this.ws || this.ws.readyState !== WebSocket.OPEN) return;
-
-                try {
-                    this.ws.send(JSON.stringify({ Type: MessageType.RequestPing }));
-                } catch { }
-
-                if (Date.now() - this.lastLiveness > PING_TIMEOUT_MS) {
-                    Logger.debug("Signal liveness timeout; forcing reconnect", config.debug);
-                    try {
-                        this.ws.terminate?.();
-                    } catch { }
-                }
-            }, PING_INTERVAL_MS);
-        }
     }
 
     private onOpen() {
-        this.retryCount = 0;
         Logger.debug("Connected to Signal", config.debug);
-        this.lastLiveness = Date.now();
     }
 
     private onError(err: any) {
@@ -177,30 +111,13 @@ export class NethernetSignal extends EventEmitter {
     private async onClose(code: number, reason: string) {
         Logger.debug(`Signal Disconnected code=${code} reason=${reason}`, config.debug);
 
-        if (this.ws === null && this.pingInterval) {
-            clearInterval(this.pingInterval);
-            this.pingInterval = null;
-        }
-
         if (this.destroyed) return;
 
-        // 1006 is abnormal closure; treat as retryable
-        // 1011 internal error; retryable
-        // 4401 unauthorized; fetch new token on next init
-        const retryable = [1006, 1011, 4401].includes(code) || code === 0;
-
-        if (retryable && this.retryCount < MAX_RETRIES) {
-            this.retryCount++;
-            await this.destroy(true);
-        } else {
-            await this.destroy(false);
-            this.emit("error", new Error(`Signal closed: ${code} ${reason}`));
-        }
+        await this.destroy();
+        this.emit("error", new Error(`Signal closed: ${code} ${reason}`));
     }
 
     private onMessage(res: RawData) {
-        this.lastLiveness = Date.now();
-
         let message: MessageEnvelope | null = null;
 
         if (typeof res === "string") {
