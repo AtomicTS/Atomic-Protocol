@@ -126,7 +126,7 @@ export class Client extends Connection {
     };
 
     public readPacket(packet: any) {
-        if (config.ignoredPackets.includes(packet[0])) return;
+        if (config.ignoredPackets.includes(packet[0])) return Logger.debug(`Ignored Packet: ${packet[0]}`, this.options.debug);
 
         //Debugging Purposes
         // console.log(packet[0]);

@@ -1,7 +1,7 @@
 # Atomic Protocol
 [![NPM version](https://img.shields.io/npm/v/atomic-protocol.svg?logo=npm)](http://npmjs.com/package/atomic-protocol)
 
-[Our Docs](./docs/API.md)
+[![Official Discord](https://img.shields.io/static/v1.svg?label=OFFICIAL&message=DISCORD&color=blue&logo=discord&style=for-the-badge)](https://discord.gg/AaEqYaegE3)
 
 Atomic Protocol is a modern, efficient, and fully TypeScript-rewritten version of  
 [PrismarineJS/bedrock-protocol](https://github.com/PrismarineJS/bedrock-protocol).  
@@ -12,6 +12,8 @@ It’s built with performance and maintainability in mind.
 - ✅ Strongly-typed packet definitions
 - ✅ Clean API for client creation  
 - ❌ No proxy or server implementation (for those, use the original [PrismarineJS/bedrock-protocol](https://github.com/PrismarineJS/bedrock-protocol))
+
+[Our Docs](./docs/API.md)
 
 ---
 
