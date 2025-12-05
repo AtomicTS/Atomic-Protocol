@@ -45,7 +45,7 @@ export const createClient = (options: ClientOptions) => {
         client.on("connect_allowed", () => connect(client));
         if (options.skipPing) client.init();
         else {
-            ping({ host: client.options.host, networkId: client.options.networkId, port: client.options.port }).then((ad) => {
+            ping({ host: client.options.host, networkId: client.options.networkId, port: client.options.port, timeout: options.connectTimeout }).then((ad) => {
                 if (client.options.transport === "nethernet") return client.init();
 
                 if (ad.portV4 && client.options.followPort) client.options.port = ad.portV4;
@@ -117,9 +117,10 @@ interface PingOptions {
     host?: string;
     port?: number;
     networkId?: any;
+    timeout?: number;
 }
 
-async function ping({ host, port, networkId }: PingOptions) {
+async function ping({ host, port, networkId, timeout }: PingOptions) {
     if (networkId) {
         const con = new NethernetClient({ networkId });
 
@@ -134,7 +135,7 @@ async function ping({ host, port, networkId }: PingOptions) {
     const con = new RaknetClient({ host, port });
 
     try {
-        const value = await con.ping();
+        const value = await con.ping(timeout);
         const serverInfo = convert(value);
         return serverInfo;
     } finally {

@@ -6,6 +6,9 @@ export const config = {
     deviceModel: "AtomicTS",
     connectTimeout: 9000,
     autoInitPlayer: true,
+    ignoredPackets: [
+        0x91
+    ],
 
     parties: {
         xbox: "http://xboxlive.com",
@@ -33,5 +36,5 @@ export const defaultOptions = {
     autoInitPlayer: true,
     connectTimeout: 9000,
     packets: [],
-    
+
 };

@@ -28,10 +28,6 @@ export class Client extends Connection {
     public nethernet: any;
     public networkSettingsRequested = false;
 
-    public start: number = Date.now();
-    public end: number = Date.now();
-    public difference: number = 0;
-
     override on<K extends keyof Events>(event: K, listener: Events[K]): this {
         return super.on(event, listener);
     }
@@ -130,6 +126,10 @@ export class Client extends Connection {
     };
 
     public readPacket(packet: any) {
+        if (config.ignoredPackets.includes(packet[0])) return;
+
+        //Debugging Purposes
+        // console.log(packet[0]);
         const des = this.deserializer.parsePacketBuffer(packet) as unknown as { data: { name: string, params: any; }; };
         const pakData = { name: des.data.name, params: des.data.params };
 
@@ -139,8 +139,6 @@ export class Client extends Connection {
                 this.emit('client.server_handshake', des.data.params);
                 break;
             case "network_settings": {
-                this.start = Date.now();
-                Logger.debug(`Network settings ${JSON.stringify(pakData.params)}`, this.options.debug);
                 const compressionAlgorithm = pakData.params.compression_algorithm ?? 'deflate';
                 this.compressionAlgorithm = compressionAlgorithm;
                 this.compressionHeader = compressionAlgorithm === 'snappy' ? 1 : 0;
@@ -166,8 +164,6 @@ export class Client extends Connection {
                 break;
             case 'play_status':
                 if (this.status === clientStatus.Authenticating) {
-                    this.end = Date.now();
-                    this.difference = this.end - this.start;
                     this.emit('join');
                     this.setStatus(clientStatus.Initializing);
                 }
@@ -209,7 +205,7 @@ export class Client extends Connection {
             this.setStatus(clientStatus.Connecting);
             if (!this.networkSettingsRequested) {
                 this.networkSettingsRequested = true;
-                this.queue('request_network_settings', { client_protocol: Number(config.protocol) });
+                this.queue('request_network_settings', { client_protocol: Number(this.options.protocolVersion) });
             }
         };
         this.connection.onCloseConnection = (reason: any) => {
