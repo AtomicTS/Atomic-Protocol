@@ -18,7 +18,7 @@
     "url": "git+https://github.com/Serial-V/Atomic-Protocol.git"
   },
   "license": "MIT",
-  "author": "Serial-V, NoVa Gh0ul",
+  "author": "Serial-V",
   "type": "commonjs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
