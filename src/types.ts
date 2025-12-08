@@ -22,12 +22,28 @@ export const PUBLIC_KEY = 'MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAECRXueJeTDqNRRgJi/vlRu
 
 //Interfaces
 
+export interface Token {
+    userXUID: string;
+    userHash: string;
+    XSTSToken: string;
+    expiresOn: string;
+}
+
+export interface Tokens {
+    realms: Token;
+    bedrock: Token;
+    mcToken: {
+        token: string;
+        expiresOn: string;
+    };
+}
+
 export interface ClientOptions {
     host?: string;
     port?: number;
     realmId?: number;
     inviteCode?: string;
-    authflow: Authflow;
+    authflow: Authflow | Tokens;
 
     protocolVersion?: number;
     version?: string;

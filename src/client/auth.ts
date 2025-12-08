@@ -1,5 +1,6 @@
+import { Authflow } from "prismarine-auth";
 import { config } from "../config/config";
-import { ClientOptions } from "../types";
+import { ClientOptions, Token } from "../types";
 import { Errors } from "../utils/errors";
 import { Logger } from "../utils/logger";
 import { Client } from "./client";
@@ -12,7 +13,11 @@ export enum AuthenticationType {
 export const realmAuth = async (options: ClientOptions) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const auth = await options.authflow.getXboxToken(config.parties.realm, true);
+            //Conditional auth token acquisition
+            const authflow = options.authflow;
+            const auth = authflow instanceof Authflow ? await authflow.getXboxToken(config.parties.realm, true) : authflow.realms;
+            if (!auth.XSTSToken || !auth.userHash) throw Errors.noTokens();
+
             if (options.inviteCode) await acceptInvite(options.inviteCode!);
             await OptIn(options);
 
@@ -86,10 +91,26 @@ export const authenticate = async (client: Client, options: ClientOptions) => {
     try {
         const authflow = options.authflow;
 
-        //@ts-ignore
-        const chains = await authflow.getMinecraftBedrockToken(client.clientX509).catch((e: any) => {
-            throw e;
-        });
+        let chains: any;
+
+        if (authflow instanceof Authflow) {
+            //@ts-ignore
+            chains = chains = await authflow.getMinecraftBedrockToken(client.clientX509).catch((e: any) => {
+                throw e;
+            });
+        } else {
+            const response = await fetch(config.endpoints.authenticate, {
+                method: "POST",
+                headers: {
+                    ...config.realmHeaders,
+                    Authorization: `XBL3.0 x=${authflow.bedrock.userHash};${authflow.bedrock.XSTSToken}`
+                },
+                //@ts-ignore
+                body: JSON.stringify({ clientX509: client.clientX509 })
+            });
+
+            if (!response.ok) throw Errors.noTokens();
+        }
 
         const jwt = chains[1];
         const [_, payload, __] = jwt.split('.').map((k: any) => Buffer.from(k, 'base64'));
@@ -116,7 +137,10 @@ function postAuthenticate(client: any, profile: Profile, chains: string) {
 }
 
 export async function OptIn(options: any) {
-    const auth = options.authflow ? await options.authflow.getXboxToken(config.parties.realm, true) : { ...options.auth };
+    //Conditional auth token acquisition
+    const authflow = options.authflow;
+    const auth = authflow instanceof Authflow ? await authflow.getXboxToken(config.parties.realm, true) : { ...options.authflow as Token };
+    if (!auth.XSTSToken || !auth.userHash) throw Errors.noTokens();
     let attempt = 0;
 
     while (true) {

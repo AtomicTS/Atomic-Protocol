@@ -4,6 +4,7 @@ import { EventEmitter, once } from "node:events";
 import { Authflow } from "prismarine-auth";
 import { RawData, WebSocket } from "ws";
 import { config } from "../config/config";
+import { Tokens } from "../types.js";
 import { Logger } from "../utils/logger";
 
 const MessageType = {
@@ -27,17 +28,17 @@ type ParsedIceUrl = {
 
 export class NethernetSignal extends EventEmitter {
     public networkId: string;
-    public authflow: Authflow;
+    public auth: Authflow | Tokens;
     public version: string;
     public ws: WebSocket | null = null;
     public credentials: IceServer[] = [];
 
     private destroyed = false;
 
-    constructor(networkId: string, authflow: Authflow, version: string) {
+    constructor(networkId: string, authflow: Authflow | Tokens, version: string) {
         super();
         this.networkId = networkId;
-        this.authflow = authflow;
+        this.auth = authflow;
         this.version = version;
     }
 
@@ -85,13 +86,15 @@ export class NethernetSignal extends EventEmitter {
     }
 
     async init() {
-        const xbl = await this.authflow.getMinecraftBedrockServicesToken({ version: this.version });
+        const mcToken = this.auth instanceof Authflow
+            ? (await this.auth.getMinecraftBedrockServicesToken({ version: this.version })).mcToken
+            : this.auth.mcToken.token;
         Logger.debug('Fetched XBL Token', config.debug);
 
         const address = `wss://signal.franchise.minecraft-services.net/ws/v1.0/signaling/${this.networkId}`;
         Logger.debug(`Connecting to Signal ${address}`, config.debug);
 
-        const ws = new WebSocket(address, { headers: { Authorization: xbl.mcToken } });
+        const ws = new WebSocket(address, { headers: { Authorization: mcToken } });
         this.ws = ws;
 
         ws.on("open", () => this.onOpen());

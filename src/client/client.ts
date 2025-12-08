@@ -4,7 +4,6 @@ import { keyExchange } from "../handshake/keyExchange";
 import login from "../handshake/login";
 import loginVerify from "../handshake/loginVerify";
 import { NethernetClient } from "../nethernet";
-import { PacketViolationWarningPacket } from "../packets/packet_packet_violation_warning";
 import { RaknetClient } from "../rak";
 import { createDeserializer, createSerializer } from "../transforms/serializer";
 import { ClientOptions, clientStatus } from "../types";
@@ -126,10 +125,8 @@ export class Client extends Connection {
     };
 
     public readPacket(packet: any) {
-        if (config.ignoredPackets.includes(packet[0])) return Logger.debug(`Ignored Packet: ${packet[0]}`, this.options.debug);
+        if (config.ignoredPackets.includes(packet[0])) return;
 
-        //Debugging Purposes
-        // console.log(packet[0]);
         const des = this.deserializer.parsePacketBuffer(packet) as unknown as { data: { name: string, params: any; }; };
         const pakData = { name: des.data.name, params: des.data.params };
 
@@ -169,15 +166,6 @@ export class Client extends Connection {
                 }
                 this.onPlayStatus(pakData.params);
                 break;
-            case 'packet_violation_warning': {
-                const violation = pakData.params as PacketViolationWarningPacket;
-                Logger.debug(
-                    `Packet violation warning id=${violation.packet_id} severity=${violation.severity} type=${violation.violation_type} reason=${violation.reason}`,
-                    this.options.debug
-                );
-                this.emit('packet_violation_warning', violation);
-                break;
-            }
             default:
                 if (this.status !== clientStatus.Initializing && this.status !== clientStatus.Initialized) {
                     console.error(`Can't accept ${des.data.name}, client not authenticated yet : ${this.status}`);

@@ -7,7 +7,8 @@ export type ErrorCode =
     | "INVITE_FAILED"
     | "INVALID_PROTOCOL"
     | "UNSUPPORTED_PROTOCOL"
-    | "CREATION_FAILED";
+    | "CREATION_FAILED"
+    | "INVALID_TOKENS";
 
 export class AtomicError extends Error {
     readonly code: ErrorCode;
@@ -40,5 +41,8 @@ export const Errors = {
     },
     unsupportedProtocol() {
         return new AtomicError("UNSUPPORTED_PROTOCOL", `Unsupported protocol: "NETHERNET".`);
-    }
+    },
+    noTokens() {
+        return new AtomicError("INVALID_TOKENS", "Unable to authenticate. No tokens provided.");
+    },
 };

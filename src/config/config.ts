@@ -26,7 +26,8 @@ export const config = {
     endpoints: {
         worlds: "https://pocket.realms.minecraft.net/worlds",
         address: (realmId: number) => `https://pocket.realms.minecraft.net/worlds/${realmId}/join`,
-        acceptInvite: (code: string) => `https://bedrock.frontendlegacy.realms.minecraft-services.net/invites/v1/link/accept/${code}`
+        acceptInvite: (code: string) => `https://bedrock.frontendlegacy.realms.minecraft-services.net/invites/v1/link/accept/${code}`,
+        authenticate: `https://multiplayer.minecraft.net/authentication`
     }
 };
 
@@ -36,5 +37,4 @@ export const defaultOptions = {
     autoInitPlayer: true,
     connectTimeout: 9000,
     packets: [],
-
 };
