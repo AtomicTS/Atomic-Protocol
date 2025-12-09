@@ -4,14 +4,22 @@ on:
   schedule:
     - cron: "0 */2 * * *"
   workflow_dispatch:
+    
+permissions:
+  issues: write
+  contents: read
 
 jobs:
   watcher:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@main
     - uses: oven-sh/setup-bun@v1
-    - run: bun .github/helper-bot/index.ts
+    - name: Install Github Actions helper
+      run: npm i gh-helpers
+    - name: Runs Helper
+      run: bun .github/helper-bot/index.ts
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

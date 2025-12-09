@@ -136,6 +136,11 @@ function postAuthenticate(client: any, profile: Profile, chains: string) {
     client.emit('session');
 }
 
+/**
+ * Opts the player into realm story features for the given realm
+ * @param options Contains the authflow/token data and the target `realmId`.
+ * @returns Promise with request outcome, including status code and optional response body when failed.
+ */
 export async function OptIn(options: any) {
     //Conditional auth token acquisition
     const authflow = options.authflow;

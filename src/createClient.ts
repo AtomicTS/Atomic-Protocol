@@ -68,6 +68,7 @@ export const createClient = (options: ClientOptions) => {
 async function connect(client: Client) {
     if (client.options.transport === "nethernet") {
         if (client.options.useSignalling) {
+            client.nethernet = {};
             client.nethernet.signalling = new NethernetSignal(
                 //@ts-ignore
                 client.connection.nethernet.networkId,

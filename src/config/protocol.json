@@ -6173,7 +6173,8 @@
                 "clientbound_controls_scheme": "packet_clientbound_controls_scheme",
                 "server_script_debug_drawer": "packet_server_script_debug_drawer",
                 "serverbound_pack_setting_change": "packet_serverbound_pack_setting_change",
-                "graphics_override_parameter": "packet_graphics_override_parameter"
+                "graphics_override_parameter": "packet_graphics_override_parameter",
+                "serverbound_data_store": "packet_serverbound_data_store"
               }
             }
           ]
@@ -6336,10 +6337,6 @@
         {
           "name": "must_accept",
           "type": "bool"
-        },
-        {
-          "name": "behavior_packs",
-          "type": "ResourcePackIdVersions"
         },
         {
           "name": "resource_packs",
@@ -6948,10 +6945,6 @@
         },
         {
           "name": "block_network_ids_are_hashes",
-          "type": "bool"
-        },
-        {
-          "name": "tick_death_systems",
           "type": "bool"
         },
         {
@@ -7758,6 +7751,10 @@
         {
           "name": "tick",
           "type": "varint64"
+        },
+        {
+          "name": "ambient",
+          "type": "bool"
         }
       ]
     ],
@@ -8077,6 +8074,10 @@
         {
           "name": "data",
           "type": "lf32"
+        },
+        {
+          "name": "swing_source",
+          "type": "i32"
         },
         {
           "anon": true,
@@ -8634,7 +8635,7 @@
         },
         {
           "name": "use_player_id",
-          "type": "u8"
+          "type": "bool"
         },
         {
           "name": "event_data",
@@ -9423,7 +9424,7 @@
         },
         {
           "name": "version",
-          "type": "varint"
+          "type": "string"
         }
       ]
     ],
@@ -14564,6 +14565,31 @@
         {
           "name": "reset",
           "type": "bool"
+        }
+      ]
+    ],
+    "packet_serverbound_data_store": [
+      "container",
+      [
+        {
+          "name": "data_store_name",
+          "type": "string"
+        },
+        {
+          "name": "property",
+          "type": "string"
+        },
+        {
+          "name": "path",
+          "type": "string"
+        },
+        {
+          "name": "date",
+          "value": "u8"
+        },
+        {
+          "name": "update_count",
+          "type": "varint"
         }
       ]
     ]
