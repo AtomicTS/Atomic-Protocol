@@ -97,9 +97,11 @@ export class NethernetSignal extends EventEmitter {
     }
 
     async init() {
-        const mcToken = this.auth instanceof Authflow
-            ? (await this.auth.getMinecraftBedrockServicesToken({ version: this.version })).mcToken
-            : this.auth.mcToken.token;
+        const flow: any = this.auth as any;
+        const usesAuthflow = typeof flow?.getMinecraftBedrockServicesToken === "function";
+        const mcToken = usesAuthflow
+            ? (await flow.getMinecraftBedrockServicesToken({ version: this.version })).mcToken
+            : flow.mcToken?.token ?? flow.mcToken;
         Logger.debug('Fetched XBL Token', config.debug);
 
         const address = `wss://signal.franchise.minecraft-services.net/ws/v1.0/signaling/${this.networkId}`;

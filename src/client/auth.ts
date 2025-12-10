@@ -14,8 +14,11 @@ export const realmAuth = async (options: ClientOptions) => {
     return new Promise(async (resolve, reject) => {
         try {
             //Conditional auth token acquisition
-            const authflow = options.authflow;
-            const auth = authflow instanceof Authflow ? await authflow.getXboxToken(config.parties.realm, true) : authflow.realms;
+            const authflow = options.authflow as any;
+            const usesAuthflow = typeof authflow?.getXboxToken === "function";
+            const auth = usesAuthflow
+                ? await authflow.getXboxToken(config.parties.realm, true)
+                : authflow.realms ?? authflow;
             if (!auth?.XSTSToken || !auth?.userHash) throw Errors.noTokens();
 
             if (options.inviteCode) await acceptInvite(options.inviteCode!);
@@ -89,11 +92,12 @@ interface Profile {
 
 export const authenticate = async (client: Client, options: ClientOptions) => {
     try {
-        const authflow = options.authflow;
+        const authflow = options.authflow as any;
+        const usesAuthflow = typeof authflow?.getMinecraftBedrockToken === "function";
 
         let chains: any;
 
-        if (authflow instanceof Authflow) {
+        if (usesAuthflow) {
             //@ts-ignore
             chains = chains = await authflow.getMinecraftBedrockToken(client.clientX509).catch((e: any) => {
                 throw e;
@@ -143,8 +147,11 @@ function postAuthenticate(client: any, profile: Profile, chains: string) {
  */
 export async function OptIn(options: any) {
     //Conditional auth token acquisition
-    const authflow = options.authflow;
-    const auth = authflow instanceof Authflow ? await authflow.getXboxToken(config.parties.realm, true) : { ...options.authflow as Token };
+    const authflow = options.authflow as any;
+    const usesAuthflow = typeof authflow?.getXboxToken === "function";
+    const auth = usesAuthflow
+        ? await authflow.getXboxToken(config.parties.realm, true)
+        : authflow.realms ?? { ...(options.authflow as Token) };
     if (!auth.XSTSToken || !auth.userHash) throw Errors.noTokens();
     let attempt = 0;
 
