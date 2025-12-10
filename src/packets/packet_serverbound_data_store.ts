@@ -8,8 +8,12 @@ export interface ServerboundDataStorePacket {
   data_store_name: string;
   property: string;
   path: string;
-  date: any;
-  update_count: number;
+  data_type: number;
+  data:
+    | { data_type: "0"; value: number }
+    | { data_type: "1"; value: boolean }
+    | { data_type: "2"; value: string };
+  update_count: I32le;
 }
 
 export const ServerboundDataStorePacketInfo: import("./metadata").PacketMetadata =

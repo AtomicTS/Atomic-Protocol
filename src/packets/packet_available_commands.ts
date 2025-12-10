@@ -10,14 +10,7 @@ export interface AvailableCommandsPacket {
   enum_values: string[];
   chained_subcommand_values: string[];
   suffixes: string[];
-  enums: {
-    name: string;
-    values: (
-      | { "../_enum_type": "byte"; value: number }
-      | { "../_enum_type": "short"; value: number }
-      | { "../_enum_type": "int"; value: number }
-    )[];
-  }[];
+  enums: { name: string; values: number[] }[];
   chained_subcommands: {
     name: string;
     values: { index: number; value: number }[];
@@ -26,34 +19,14 @@ export interface AvailableCommandsPacket {
     name: string;
     description: string;
     flags: number;
-    permission_level: number;
+    permission_level: string;
     alias: number;
     chained_subcommand_offsets: number[];
     overloads: {
       chaining: boolean;
       parameters: {
         parameter_name: string;
-        value_type:
-          | "int"
-          | "float"
-          | "value"
-          | "wildcard_int"
-          | "operator"
-          | "command_operator"
-          | "target"
-          | "wildcard_target"
-          | "file_path"
-          | "integer_range"
-          | "equipment_slots"
-          | "string"
-          | "block_position"
-          | "position"
-          | "message"
-          | "raw_text"
-          | "json"
-          | "block_states"
-          | "command";
-        enum_type: "valid" | "enum" | "suffixed" | "soft_enum";
+        symbol: number;
         optional: boolean;
         options: CommandFlags;
       }[];

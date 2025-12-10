@@ -6,10 +6,10 @@
 
 export interface CommandOutputPacket {
   origin: CommandOrigin;
-  output_type: "last" | "silent" | "all" | "data_set";
-  success_count: number;
-  output: { success: boolean; message_id: string; parameters: string[] }[];
-  data_set: { output_type: "data_set"; value: string };
+  output_type: string;
+  success_count: I32le;
+  messages: { message_id: string; internal: boolean; parameters: string[] }[];
+  data: string | null;
 }
 
 export interface CommandOrigin {
