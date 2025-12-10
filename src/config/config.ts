@@ -11,6 +11,7 @@ export const config = {
     ignoredPackets: [
         0x91, //145
         0xC0, //192
+        0x4c, //76
     ],
 
     parties: {

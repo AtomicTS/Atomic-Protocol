@@ -58,6 +58,21 @@ export class Connection extends EventEmitter {
     };
 
     write(name: any, params: any) {
+        if (name === "command_request") {
+            params ??= {};
+
+            params.command ??= "";
+            params.origin ??= {};
+
+            params.origin.origin ??= "player";
+            params.origin.uuid ??= "00000000-0000-0000-0000-000000000000";
+            params.origin.request_id ??= "req";
+            params.origin.player_entity_id ??= 1n;
+
+            params.internal ??= false;
+            params.version ??= "latest";
+        }
+
         this.framer.reset(this);
         const packet = this.serializer.createPacketBuffer({ name, params });
         this.framer.addEncodedPacket(packet);
