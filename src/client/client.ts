@@ -1,4 +1,5 @@
 import { Events } from "atomic-codec";
+import { PacketViolationWarningPacket } from "atomic-codec/dist/packets/packet_violation_warning";
 import { config } from "../config/config";
 import { keyExchange } from "../handshake/keyExchange";
 import login from "../handshake/login";
@@ -163,6 +164,10 @@ export class Client extends Connection {
                     this.setStatus(clientStatus.Initializing);
                 }
                 this.onPlayStatus(pakData.params);
+                break;
+            case "packet_violation_warning":
+                const violation = pakData.params as PacketViolationWarningPacket;
+                Logger.debug(`Packet Violation Warning: id=${violation.packet_id}; severity=${violation.severity}; type=${violation.violation_type}; reason=${violation.reason}`, config.debug);
                 break;
             default:
                 if (this.status !== clientStatus.Initializing && this.status !== clientStatus.Initialized) {
