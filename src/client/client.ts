@@ -10,6 +10,7 @@ import { createDeserializer, createSerializer } from "../transforms/serializer";
 import { ClientOptions, clientStatus } from "../types";
 import { Errors } from "../utils/errors";
 import { Logger } from "../utils/logger";
+import { sendTelemetry } from "../utils/telemetry";
 import { authenticate, AuthenticationType, createOfflineSession } from "./auth";
 import { Connection } from "./connection";
 
@@ -130,9 +131,10 @@ export class Client extends Connection {
         process.nextTick(() => this.handle(buffer));
     };
 
-    public readPacket(packet: any) {
+    public readPacket(packet: any, buf: any) {
         if (config.ignoredPackets.includes(packet[0])) return;
 
+        if (packet[0] === 79) Logger.warn(buf.toString("hex"));
         Logger.debug(`Received Packet: ${packet[0]}`, config.debug);
         const des = this.deserializer.parsePacketBuffer(packet) as unknown as { data: { name: string, params: any; }; };
         const pakData = { name: des.data.name, params: des.data.params };
@@ -168,6 +170,10 @@ export class Client extends Connection {
             case "packet_violation_warning":
                 const violation = pakData.params as PacketViolationWarningPacket;
                 Logger.debug(`Packet Violation Warning: id=${violation.packet_id}; severity=${violation.severity}; type=${violation.violation_type}; reason=${violation.reason}`, config.debug);
+                sendTelemetry({
+                    message: `Packet Violation Warning: id=${violation.packet_id}; severity=${violation.severity}; type=${violation.violation_type}; reason=${violation.reason}`,
+                    name: "Packet Violation"
+                });
                 break;
             default:
                 if (this.status !== clientStatus.Initializing && this.status !== clientStatus.Initialized) {
@@ -219,11 +225,12 @@ export class Client extends Connection {
         }, this.options.connectTimeout || config.connectTimeout);
     };
 
-    sendLogin() {
+    async sendLogin() {
         this.setStatus(clientStatus.Authenticating);
 
         //@ts-ignore
         this.createClientChain(null, this.options.offline);
+        const token = await this.getMultiplayerSessionToken();
 
         // Removed "MC-Data Feature" - Unnecessary Backwards Compatibility
         const authType = this.options.offline ? AuthenticationType.SelfSigned : AuthenticationType.Full;
@@ -232,7 +239,7 @@ export class Client extends Connection {
 
         const encodedLoginPayload = JSON.stringify({
             AuthenticationType: authType,
-            Token: '',
+            Token: token ?? "",
             Certificate: JSON.stringify({ chain })
         });
 
@@ -260,4 +267,40 @@ export class Client extends Connection {
             else this.write('set_local_player_as_initialized', { runtime_entity_id: this.entityId });
         };
     };
+
+    async getMultiplayerSessionToken() {
+        try {
+            const authflow = this.options.authflow as any;
+            const usesAuthflow = typeof authflow?.getXboxToken === "function";
+            const auth = usesAuthflow
+                ? (await authflow.getMinecraftBedrockServicesToken({ version: config.minecraftVersion })).mcToken
+                : authflow.mcToken.token ?? authflow;
+
+            const response = await fetch(
+                "https://authorization.franchise.minecraft-services.net/api/v1.0/multiplayer/session/start",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: auth,
+                        "Accept-Encoding": "identity",
+                    },
+                    body: JSON.stringify({
+                        //@ts-ignore
+                        publicKey: this.clientX509,
+                    }),
+                },
+            );
+
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(`Multiplayer session start failed: ${response.status} ${response.statusText} - ${text}`,);
+            }
+
+            const json = (await response.json()) as { result: { signedToken: string; }; };
+            return json.result.signedToken;
+        } catch (error) {
+            Logger.error(`Error while getting Multiplayer Session Token: ${error instanceof Error ? error.message : String(error)}`,);
+        }
+    }
 };

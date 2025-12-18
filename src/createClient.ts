@@ -69,8 +69,6 @@ async function connect(client: Client) {
     if (client.options.transport === "nethernet") {
         if (client.options.useSignalling) {
             client.nethernet = {};
-            const useAuthflow = typeof client.options.authflow === "function";
-
             client.nethernet.signalling = new NethernetSignal(
                 //@ts-ignore
                 client.connection.nethernet.networkId,

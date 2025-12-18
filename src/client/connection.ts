@@ -8,6 +8,7 @@ import Framer from '../transforms/framer';
 import { Codec, createDeserializer, createSerializer } from "../transforms/serializer";
 import { clientStatus, CompressionAlgorithm } from '../types';
 import { Logger } from "../utils/logger";
+import { sendTelemetry } from '../utils/telemetry';
 
 export class Connection extends EventEmitter {
     // Typed event helpers for packet/connection events.
@@ -103,7 +104,6 @@ export class Connection extends EventEmitter {
 
     queue(name: any, params: any) {
         const packet = this.serializer.createPacketBuffer({ name, params });
-        if (name === 'level_chunk') return; //The client does not need the world data...
         this.sendQ.push(packet);
     };
 
@@ -157,10 +157,22 @@ export class Connection extends EventEmitter {
             const packets = Framer.getPackets(buf, { label: "onDecryptedPacket" });
             packets.forEach((packet) => {
                 //@ts-ignore
-                this.readPacket(packet);
+                this.readPacket(packet, buf);
             });
         } catch (err) {
-            Logger.debug(`[Framer] failed to decode decrypted batch length=${buf.byteLength}`, config.debug);
+            const packetId = tryReadPacketId(buf);
+
+            sendTelemetry({
+                name: "Packet Decode Failure",
+                message: "Failed to decode decrypted packet batch"
+            }, {
+                packetId,
+                encrypted: true,
+                batchLength: buf.byteLength,
+                compression: this.compressionAlgorithm,
+                error: String(err),
+            });
+
             this.emit("error", err as Error);
         }
     };
@@ -173,17 +185,57 @@ export class Connection extends EventEmitter {
                     const packets = Framer.decode(this, buffer);
                     for (let packet of packets) {
                         //@ts-ignore
-                        this.readPacket(packet);
+                        this.readPacket(packet, buffer);
                     }
                 } catch (err) {
-                    Logger.debug(`[Framer] decode error batchLength=${buffer.byteLength} compression=${this.compressionAlgorithm} ready=${this.compressionReady}`, config.debug);
+                    const payload = buffer.slice(1);
+                    const packetId = tryReadPacketId(payload);
+
+                    sendTelemetry({
+                        name: "Packet Decode Error",
+                        message: "Framer.decode failed"
+                    }, {
+                        packetId,
+                        encrypted: false,
+                        batchHeader: buffer[0],
+                        batchLength: buffer.byteLength,
+                        compression: this.compressionAlgorithm,
+                        ready: this.compressionReady,
+                        error: String(err),
+                    });
+
                     this.emit("error", err as Error);
                 }
             };
         } else {
-            this.emit("error", new Error(`bad packet header` + buffer[0]));
+            sendTelemetry({
+                name: "Bad Packet Header",
+                message: "Invalid batch header"
+            }, {
+                header: buffer[0],
+                expected: this.batchHeader,
+            });
+
+            this.emit("error", new Error(`bad packet header ${buffer[0]}`));
             (this as any).close?.();
-            return;
         };
     };
 };
+
+function tryReadPacketId(buf: Buffer): number | null {
+    try {
+        let value = 0;
+        let shift = 0;
+        let offset = 0;
+
+        while (true) {
+            const byte = buf[offset++];
+            value |= (byte & 0x7f) << shift;
+            if ((byte & 0x80) === 0) return value;
+            shift += 7;
+            if (shift > 35) return null;
+        }
+    } catch {
+        return null;
+    }
+}

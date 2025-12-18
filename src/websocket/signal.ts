@@ -58,7 +58,7 @@ export class NethernetSignal extends EventEmitter {
         //Added Heartbeat to keep the client connected
         this.heartbeat = setInterval(() => {
             this.ws?.send(JSON.stringify({ Type: MessageType.RequestPing }));
-        }, 40000);
+        }, 20000);
     }
 
     async destroy() {
@@ -179,9 +179,9 @@ export class NethernetSignal extends EventEmitter {
                 break;
             }
             case MessageType.RequestPing: {
-                try {
-                    this.ws?.send(JSON.stringify({ Type: MessageType.RequestPing }));
-                } catch { }
+                // try {
+                //     this.ws?.send(JSON.stringify({ Type: MessageType.RequestPing }));
+                // } catch { }
                 break;
             }
             default:

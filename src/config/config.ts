@@ -6,11 +6,14 @@ export const config = {
     deviceModel: "AtomicTS",
     connectTimeout: 9000,
     autoInitPlayer: true,
+    telemetry: true,
 
     //Packets need fixing
     ignoredPackets: [
-        52,
-        49
+        52, //crafting_data
+        49, //inventory_content
+        31, //mob_equipment
+        15 //add_item_entity
     ],
 
     parties: {
