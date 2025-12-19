@@ -135,7 +135,6 @@ export class Client extends Connection {
         if (config.ignoredPackets.includes(packet[0])
             || this.options.ignoredPackets?.includes(packet[0])) return;
 
-        // if (packet[0] === 79) Logger.warn(buf.toString("hex"));
         Logger.debug(`Received Packet: ${packet[0]}`, config.debug);
         const des = this.deserializer.parsePacketBuffer(packet) as unknown as { data: { name: string, params: any; }; };
         const pakData = { name: des.data.name, params: des.data.params };
