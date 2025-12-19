@@ -53,6 +53,7 @@ export interface ClientOptions {
     offline?: boolean;
 
     packets?: string[];
+    ignoredPackets?: number[];
     telemetry?: boolean;
 
     username?: string;

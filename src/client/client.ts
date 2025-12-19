@@ -132,7 +132,8 @@ export class Client extends Connection {
     };
 
     public readPacket(packet: any, buf: any) {
-        if (config.ignoredPackets.includes(packet[0])) return;
+        if (config.ignoredPackets.includes(packet[0])
+            || this.options.ignoredPackets?.includes(packet[0])) return;
 
         // if (packet[0] === 79) Logger.warn(buf.toString("hex"));
         Logger.debug(`Received Packet: ${packet[0]}`, config.debug);
