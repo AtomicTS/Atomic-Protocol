@@ -11,7 +11,6 @@ import { Logger } from "../utils/logger";
 import { sendTelemetry } from '../utils/telemetry';
 
 export class Connection extends EventEmitter {
-    // Typed event helpers for packet/connection events.
     on<K extends keyof Events & (string | symbol)>(event: K, listener: Events[K]): this;
     on(event: string | symbol, listener: (...args: any[]) => void): this;
     on(event: string | symbol, listener: (...args: any[]) => void): this {
@@ -160,13 +159,12 @@ export class Connection extends EventEmitter {
                 this.readPacket(packet, buf);
             });
         } catch (err) {
-            const packetId = tryReadPacketId(buf);
-
             sendTelemetry({
                 name: "Packet Decode Failure",
                 message: "Failed to decode decrypted packet batch"
-            }, {
-                packetId,
+                //@ts-ignore
+            }, this.options.transport, {
+                packetId: "",
                 encrypted: true,
                 batchLength: buf.byteLength,
                 compression: this.compressionAlgorithm,
@@ -188,14 +186,12 @@ export class Connection extends EventEmitter {
                         this.readPacket(packet, buffer);
                     }
                 } catch (err) {
-                    const payload = buffer.slice(1);
-                    const packetId = tryReadPacketId(payload);
-
                     sendTelemetry({
                         name: "Packet Decode Error",
                         message: "Framer.decode failed"
-                    }, {
-                        packetId,
+                        //@ts-ignore
+                    }, this.options.transport, {
+                        packetId: "",
                         encrypted: false,
                         batchHeader: buffer[0],
                         batchLength: buffer.byteLength,
@@ -211,7 +207,8 @@ export class Connection extends EventEmitter {
             sendTelemetry({
                 name: "Bad Packet Header",
                 message: "Invalid batch header"
-            }, {
+                //@ts-ignore
+            }, this.options.transport, {
                 header: buffer[0],
                 expected: this.batchHeader,
             });
@@ -221,21 +218,3 @@ export class Connection extends EventEmitter {
         };
     };
 };
-
-function tryReadPacketId(buf: Buffer): number | null {
-    try {
-        let value = 0;
-        let shift = 0;
-        let offset = 0;
-
-        while (true) {
-            const byte = buf[offset++];
-            value |= (byte & 0x7f) << shift;
-            if ((byte & 0x80) === 0) return value;
-            shift += 7;
-            if (shift > 35) return null;
-        }
-    } catch {
-        return null;
-    }
-}

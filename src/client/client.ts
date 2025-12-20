@@ -173,7 +173,7 @@ export class Client extends Connection {
                 sendTelemetry({
                     message: `Packet Violation Warning: id=${violation.packet_id}; severity=${violation.severity}; type=${violation.violation_type}; reason=${violation.reason}`,
                     name: "Packet Violation"
-                });
+                }, this.options.transport);
                 break;
             default:
                 if (this.status !== clientStatus.Initializing && this.status !== clientStatus.Initialized) {

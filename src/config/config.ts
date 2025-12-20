@@ -6,7 +6,7 @@ export const config = {
     deviceModel: "AtomicTS",
     connectTimeout: 9000,
     autoInitPlayer: true,
-    telemetry: true,
+    telemetry: false,
 
     //Packets need fixing
     ignoredPackets: [

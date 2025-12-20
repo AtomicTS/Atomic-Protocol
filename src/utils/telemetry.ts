@@ -1,3 +1,4 @@
+import { version } from "../../package.json";
 import { config } from "../config/config";
 
 interface TelemetryData {
@@ -18,7 +19,7 @@ interface TelemetryData {
     context: any;
 }
 
-export const sendTelemetry = async (err: Error, context?: object) => {
+export const sendTelemetry = async (err: Error, realmType?: string, context?: object) => {
     if (!config.telemetry) return;
 
     const payload = {
@@ -35,6 +36,10 @@ export const sendTelemetry = async (err: Error, context?: object) => {
             message: err.message,
             name: err.name,
             stack: err.stack
+        },
+        data: {
+            realmType,
+            package: version
         },
         context
     } as TelemetryData;
