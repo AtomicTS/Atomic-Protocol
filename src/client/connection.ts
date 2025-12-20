@@ -163,7 +163,7 @@ export class Connection extends EventEmitter {
                 name: "Packet Decode Failure",
                 message: "Failed to decode decrypted packet batch"
                 //@ts-ignore
-            }, this.options.transport, {
+            }, this?.options?.transport ?? "Unknown", {
                 packetId: "",
                 encrypted: true,
                 batchLength: buf.byteLength,
@@ -190,7 +190,7 @@ export class Connection extends EventEmitter {
                         name: "Packet Decode Error",
                         message: "Framer.decode failed"
                         //@ts-ignore
-                    }, this.options.transport, {
+                    }, this?.options?.transport ?? "Unknown", {
                         packetId: "",
                         encrypted: false,
                         batchHeader: buffer[0],
@@ -208,7 +208,7 @@ export class Connection extends EventEmitter {
                 name: "Bad Packet Header",
                 message: "Invalid batch header"
                 //@ts-ignore
-            }, this.options.transport, {
+            }, this?.options?.transport ?? "Unknown", {
                 header: buffer[0],
                 expected: this.batchHeader,
             });
