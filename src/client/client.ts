@@ -162,8 +162,8 @@ export class Client extends Connection {
                 break;
             case 'play_status':
                 if (this.status === clientStatus.Authenticating) {
-                    this.emit('join');
                     this.setStatus(clientStatus.Initializing);
+                    this.emit('join');
                 }
                 this.onPlayStatus(pakData.params);
                 break;
@@ -178,6 +178,7 @@ export class Client extends Connection {
             default:
                 if (this.status !== clientStatus.Initializing && this.status !== clientStatus.Initialized) {
                     console.error(`Can't accept ${des.data.name}, client not authenticated yet : ${this.status}`);
+                    this.disconnect("Client Desynced - Terminating...");
                     break;
                 }
         }
