@@ -437,10 +437,10 @@ are-we-there-yet@~1.0.0:
     delegates "^1.0.0"
     readable-stream "^2.0.0 || ^1.1.13"
 
-atomic-codec@^1.0.22:
-  version "1.0.24"
-  resolved "https://registry.yarnpkg.com/atomic-codec/-/atomic-codec-1.0.24.tgz#c810154decc0160c514344b8f579d93419555aef"
-  integrity sha512-u1zbPD7VD4wkCbOfpbkjgi/2mZpZpvwLH1hXdcqX7cHucTBX0/aOJwU1JYwEScOKXNX505IRF32fTLqrA4UHGg==
+atomic-codec@^1.0.26:
+  version "1.0.26"
+  resolved "https://registry.yarnpkg.com/atomic-codec/-/atomic-codec-1.0.26.tgz#bec61cf6050298ec5c923a7b6219c364ff1ebf95"
+  integrity sha512-d48SIIYV1+h9kh1n2YwpnhPC3k+MZRbxzixJ2WAkj3MCyD1QaT7eHbpJyjavGmdsj9pm3OcPcpBaJv6iyw/Vxg==
   dependencies:
     prismarine-nbt "^2.7.0"
 
@@ -1374,7 +1374,7 @@ rollup-plugin-dts@^6.3.0:
   optionalDependencies:
     "@babel/code-frame" "^7.27.1"
 
-rollup@^4.53.5:
+rollup@^4.54.0:
   version "4.54.0"
   resolved "https://registry.yarnpkg.com/rollup/-/rollup-4.54.0.tgz#930f4dfc41ff94d720006f9f62503612a6c319b8"
   integrity sha512-3nk8Y3a9Ea8szgKhinMlGMhGMw89mqule3KWczxhIzqudyHdCIOHw8WJlj/r329fACjKLEh13ZSk7oE22kyeIw==
@@ -1629,7 +1629,7 @@ turbo-windows-arm64@2.7.1:
   resolved "https://registry.yarnpkg.com/turbo-windows-arm64/-/turbo-windows-arm64-2.7.1.tgz#9082b495fe6bde4dfef9c9f6a3427793673e026b"
   integrity sha512-1rZk9htm3+iP/rWCf/h4/DFQey9sMs2TJPC4T5QQfwqAdMWsphgrxBuFqHdxczlbBCgbWNhVw0CH2bTxe1/GFg==
 
-turbo@^2.6.3:
+turbo@^2.7.1:
   version "2.7.1"
   resolved "https://registry.yarnpkg.com/turbo/-/turbo-2.7.1.tgz#5fdebff2a398e48c87c780f6ee265b92e310403c"
   integrity sha512-zAj9jGc7VDvuAo/5Jbos4QTtWz9uUpkMhMKGyTjDJkx//hdL2bM31qQoJSAbU+7JyK5vb0LPzpwf6DUt3zayqg==
