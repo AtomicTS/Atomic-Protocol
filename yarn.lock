@@ -437,10 +437,10 @@ are-we-there-yet@~1.0.0:
     delegates "^1.0.0"
     readable-stream "^2.0.0 || ^1.1.13"
 
-atomic-codec@^1.0.26:
-  version "1.0.26"
-  resolved "https://registry.yarnpkg.com/atomic-codec/-/atomic-codec-1.0.26.tgz#bec61cf6050298ec5c923a7b6219c364ff1ebf95"
-  integrity sha512-d48SIIYV1+h9kh1n2YwpnhPC3k+MZRbxzixJ2WAkj3MCyD1QaT7eHbpJyjavGmdsj9pm3OcPcpBaJv6iyw/Vxg==
+atomic-codec@^1.0.27:
+  version "1.0.27"
+  resolved "https://registry.yarnpkg.com/atomic-codec/-/atomic-codec-1.0.27.tgz#59a820afd488c2c411a337bfcc25386db177f03f"
+  integrity sha512-x/yBVE957zpJtWTJB4it/9HJA1Y6sJbI8KovvCmlefQvHDJeHpBIvaYjwksNVAk4M6Isi4nrMVZ2M5uOHexGWw==
   dependencies:
     prismarine-nbt "^2.7.0"
 
