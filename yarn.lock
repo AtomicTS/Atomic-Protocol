@@ -1216,9 +1216,9 @@ prettier@^3.7.4:
     uuid-1345 "^1.0.2"
 
 prismarine-nbt@^2.7.0:
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/prismarine-nbt/-/prismarine-nbt-2.7.0.tgz#5e406909c5018fbf6a2699cc9d16838ca0d66d8f"
-  integrity sha512-Du9OLQAcCj3y29YtewOJbbV4ARaSUEJiTguw0PPQbPBy83f+eCyDRkyBpnXTi/KPyEpgYCzsjGzElevLpFoYGQ==
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/prismarine-nbt/-/prismarine-nbt-2.8.0.tgz#ac4efda170b356107b0aa178f21eb100ff78a526"
+  integrity sha512-5D6FUZq0PNtf3v/41ImDlwThVesOv5adyqCRMZLzmkUGEmRJNNh5C6AsnvrClBftXs+IF0yqPnZoj8kcNPiMGg==
   dependencies:
     protodef "^1.18.0"
 
